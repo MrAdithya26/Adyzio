@@ -145,6 +145,7 @@ The link tool writes ready captions for all of these from your site's product ex
 **Morning – find (20 min).** Open Amazon Today's Deals, Flipkart offers and ExtraPe's deal feed. For each good deal, copy the product link and paste it into a new row of the Link Sheet: `source_url`, `title`, `category` (slug), `brand`, 3–5 `features` separated by `|`, one-line `short_desc`. Leave price empty unless you are filling it right now from the store page.
 
 **Convert (10 min).**
+
 1. Download the Link Sheet as CSV (File → Download → CSV) and save it as `linksheet.csv`.
 2. Run:
    ```
@@ -161,6 +162,7 @@ python3 apps/link-tools/adyzio_links.py export linksheet.csv -o import-today.csv
 `validate` writes READY / ERROR into the `status` column and explains every problem (no tag, wrong category, old price, price higher than MRP…). `export` writes only READY rows, in exactly the columns adyzio.com expects. Upload `import-today.csv` in **adyzio.com/admin → Import / Export**. Open 2–3 new product pages and click Buy once to see they land on the right product.
 
 **Share (20–30 min).**
+
 1. In Admin → Import / Export, download the full export (it has each product's id and page address).
 2. Run:
    ```
@@ -254,4 +256,4 @@ Newer versions of this plan get a new dated copy in Drive and a commit in GitHub
 1. **Amazon tracking ID** – put it in `apps/link-tools/config.json` on your computer (never commit it; it is already ignored by git).
 2. **ExtraPe short-link domain** – convert one link and share the domain (for U5).
 3. **Website code home** – the site code is in the ABD repo (`deploy/adyzio` branch), which Hostinger deploys from. Keep it there and copy releases here, or move deployment to this repo? Moving means changing the Git source in Hostinger once.
-4. **Launch date** – this plan uses **Fri 6 Nov 2026**. The planner said 31 Oct; that day has passed without a live site, so move the milestone.
+4. **Launch date** – this plan uses **Fri 6 Nov 2026**. The planner said 31 Oct (today), but the site is not deployed yet and needs products and channels first, so move the milestone in the planner.
