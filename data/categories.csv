@@ -1,0 +1,91 @@
+name,parent,slug,icon,main_stores,sort_order
+Mobiles,,mobiles,📱,amazon|flipkart|croma,1
+Smartphones,Mobiles,smartphones,,amazon|flipkart|croma,1
+Mobile Accessories,Mobiles,mobile-accessories,,amazon|flipkart|croma,1
+Power Banks,Mobiles,power-banks,,amazon|flipkart|croma,1
+Tablets,Mobiles,tablets,,amazon|flipkart|croma,1
+Electronics,,electronics,🎧,amazon|flipkart|croma|tatacliq,2
+Headphones & Earbuds,Electronics,headphones-earbuds,,amazon|flipkart|croma|tatacliq,2
+Smart Watches,Electronics,smart-watches,,amazon|flipkart|croma|tatacliq,2
+Bluetooth Speakers,Electronics,bluetooth-speakers,,amazon|flipkart|croma|tatacliq,2
+Cameras,Electronics,cameras,,amazon|flipkart|croma|tatacliq,2
+Laptops & Computers,,laptops-computers,💻,amazon|flipkart|croma,3
+Laptops,Laptops & Computers,laptops,,amazon|flipkart|croma,3
+Monitors,Laptops & Computers,monitors,,amazon|flipkart|croma,3
+Keyboards & Mice,Laptops & Computers,keyboards-mice,,amazon|flipkart|croma,3
+Storage & Pendrives,Laptops & Computers,storage-pendrives,,amazon|flipkart|croma,3
+TVs & Appliances,,tvs-appliances,📺,amazon|flipkart|croma|tatacliq,4
+Televisions,TVs & Appliances,televisions,,amazon|flipkart|croma|tatacliq,4
+Washing Machines,TVs & Appliances,washing-machines,,amazon|flipkart|croma|tatacliq,4
+Refrigerators,TVs & Appliances,refrigerators,,amazon|flipkart|croma|tatacliq,4
+Air Conditioners,TVs & Appliances,air-conditioners,,amazon|flipkart|croma|tatacliq,4
+Men's Fashion,,men-s-fashion,👔,myntra|ajio|flipkart|amazon|meesho,5
+T-Shirts,Men's Fashion,t-shirts,,myntra|ajio|flipkart|amazon|meesho,5
+Shirts,Men's Fashion,shirts,,myntra|ajio|flipkart|amazon|meesho,5
+Jeans,Men's Fashion,jeans,,myntra|ajio|flipkart|amazon|meesho,5
+Ethnic Wear,Men's Fashion,ethnic-wear,,myntra|ajio|flipkart|amazon|meesho,5
+Women's Fashion,,women-s-fashion,👗,myntra|ajio|meesho|flipkart|amazon,6
+Sarees,Women's Fashion,sarees,,myntra|ajio|meesho|flipkart|amazon,6
+Kurtas & Kurtis,Women's Fashion,kurtas-kurtis,,myntra|ajio|meesho|flipkart|amazon,6
+Dresses,Women's Fashion,dresses,,myntra|ajio|meesho|flipkart|amazon,6
+Tops,Women's Fashion,tops,,myntra|ajio|meesho|flipkart|amazon,6
+Footwear,,footwear,👟,myntra|ajio|amazon|flipkart,7
+Men's Shoes,Footwear,men-s-shoes,,myntra|ajio|amazon|flipkart,7
+Women's Footwear,Footwear,women-s-footwear,,myntra|ajio|amazon|flipkart,7
+Sports Shoes,Footwear,sports-shoes,,myntra|ajio|amazon|flipkart,7
+Sandals & Slippers,Footwear,sandals-slippers,,myntra|ajio|amazon|flipkart,7
+Watches & Jewellery,,watches-jewellery,⌚,amazon|myntra|flipkart|tatacliq,8
+Men's Watches,Watches & Jewellery,men-s-watches,,amazon|myntra|flipkart|tatacliq,8
+Women's Watches,Watches & Jewellery,women-s-watches,,amazon|myntra|flipkart|tatacliq,8
+Jewellery,Watches & Jewellery,jewellery,,amazon|myntra|flipkart|tatacliq,8
+Bags & Luggage,,bags-luggage,🎒,amazon|flipkart|myntra|ajio,9
+Backpacks,Bags & Luggage,backpacks,,amazon|flipkart|myntra|ajio,9
+Handbags,Bags & Luggage,handbags,,amazon|flipkart|myntra|ajio,9
+Trolley Bags,Bags & Luggage,trolley-bags,,amazon|flipkart|myntra|ajio,9
+Home & Kitchen,,home-kitchen,🍳,amazon|flipkart|meesho,10
+Cookware,Home & Kitchen,cookware,,amazon|flipkart|meesho,10
+Kitchen Appliances,Home & Kitchen,kitchen-appliances,,amazon|flipkart|meesho,10
+Home Decor,Home & Kitchen,home-decor,,amazon|flipkart|meesho,10
+Bedsheets & Curtains,Home & Kitchen,bedsheets-curtains,,amazon|flipkart|meesho,10
+Furniture,,furniture,🛋️,amazon|flipkart,11
+Sofas,Furniture,sofas,,amazon|flipkart,11
+Beds & Mattresses,Furniture,beds-mattresses,,amazon|flipkart,11
+Office Chairs,Furniture,office-chairs,,amazon|flipkart,11
+Study Tables,Furniture,study-tables,,amazon|flipkart,11
+Beauty & Personal Care,,beauty-personal-care,💄,nykaa|amazon|myntra|flipkart,12
+Skin Care,Beauty & Personal Care,skin-care,,nykaa|amazon|myntra|flipkart,12
+Hair Care,Beauty & Personal Care,hair-care,,nykaa|amazon|myntra|flipkart,12
+Makeup,Beauty & Personal Care,makeup,,nykaa|amazon|myntra|flipkart,12
+Grooming,Beauty & Personal Care,grooming,,nykaa|amazon|myntra|flipkart,12
+Health & Fitness,,health-fitness,💪,amazon|flipkart,13
+Fitness Equipment,Health & Fitness,fitness-equipment,,amazon|flipkart,13
+Nutrition & Supplements,Health & Fitness,nutrition-supplements,,amazon|flipkart,13
+Health Devices,Health & Fitness,health-devices,,amazon|flipkart,13
+Sports & Outdoors,,sports-outdoors,🏏,amazon|flipkart,14
+Cricket,Sports & Outdoors,cricket,,amazon|flipkart,14
+Cycling,Sports & Outdoors,cycling,,amazon|flipkart,14
+Badminton,Sports & Outdoors,badminton,,amazon|flipkart,14
+Camping,Sports & Outdoors,camping,,amazon|flipkart,14
+Baby & Kids,,baby-kids,🍼,amazon|flipkart|myntra,15
+Baby Care,Baby & Kids,baby-care,,amazon|flipkart|myntra,15
+Kids Clothing,Baby & Kids,kids-clothing,,amazon|flipkart|myntra,15
+School Supplies,Baby & Kids,school-supplies,,amazon|flipkart|myntra,15
+Toys & Games,,toys-games,🧸,amazon|flipkart,16
+Educational Toys,Toys & Games,educational-toys,,amazon|flipkart,16
+Board Games,Toys & Games,board-games,,amazon|flipkart,16
+Remote Control Toys,Toys & Games,remote-control-toys,,amazon|flipkart,16
+Books & Stationery,,books-stationery,📚,amazon|flipkart,17
+Exam Preparation,Books & Stationery,exam-preparation,,amazon|flipkart,17
+Fiction,Books & Stationery,fiction,,amazon|flipkart,17
+Office Stationery,Books & Stationery,office-stationery,,amazon|flipkart,17
+Grocery & Gourmet,,grocery-gourmet,🛒,amazon|flipkart,18
+Staples,Grocery & Gourmet,staples,,amazon|flipkart,18
+Snacks & Beverages,Grocery & Gourmet,snacks-beverages,,amazon|flipkart,18
+Dry Fruits,Grocery & Gourmet,dry-fruits,,amazon|flipkart,18
+Automotive,,automotive,🚗,amazon|flipkart,19
+Car Accessories,Automotive,car-accessories,,amazon|flipkart,19
+Bike Accessories,Automotive,bike-accessories,,amazon|flipkart,19
+Helmets,Automotive,helmets,,amazon|flipkart,19
+Pet Supplies,,pet-supplies,🐾,amazon|flipkart,20
+Dog Supplies,Pet Supplies,dog-supplies,,amazon|flipkart,20
+Cat Supplies,Pet Supplies,cat-supplies,,amazon|flipkart,20

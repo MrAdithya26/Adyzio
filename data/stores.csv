@@ -1,0 +1,10 @@
+store_key,store_name,affiliate_route,how_to_make_the_link,site_detects_short_link,notes
+amazon,Amazon,Amazon Associates (direct),"SiteStripe 'Get link' on the product page, or the link tool in this repo adds your own tracking ID (tag=...-21) to a clean amazon.in/dp/ASIN link",yes (amzn.to / tag=),Creators API (product data) only after 10 qualifying sales in 30 days - VERIFY in Associates Central
+flipkart,Flipkart,ExtraPe,"ExtraPe app, website or Chrome extension: paste the Flipkart link, copy the converted link",VERIFY (ExtraPe short domain may show as 'other' / 'no tag'),Flipkart's own affiliate sign-up is often closed; ExtraPe is the route
+myntra,Myntra,ExtraPe,ExtraPe converter,VERIFY,Join Myntra directly later when ExtraPe commission grows
+meesho,Meesho,ExtraPe (if listed in ExtraPe store list - VERIFY),ExtraPe converter,VERIFY,
+ajio,AJIO,ExtraPe,ExtraPe converter,VERIFY,Join AJIO directly later when ExtraPe commission grows
+nykaa,Nykaa,ExtraPe (if listed - VERIFY),ExtraPe converter,VERIFY,
+tatacliq,Tata CLiQ,ExtraPe (if listed - VERIFY),ExtraPe converter,VERIFY,
+croma,Croma,ExtraPe (if listed - VERIFY),ExtraPe converter,VERIFY,
+other,Other store,ExtraPe (if listed - VERIFY),ExtraPe converter,no,Check ExtraPe's current store list and commission rates before adding a store

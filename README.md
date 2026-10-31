@@ -14,6 +14,12 @@ Adyzio publishes product deals and recommendations using its own affiliate links
 | `data/affiliate-links/` | Affiliate link lists for bulk updates |
 | `docs/` | Plans, decisions and notes |
 
+## Start here
+
+- **[docs/LAUNCH-PLAN.md](docs/LAUNCH-PLAN.md)** — the complete launch and implementation plan.
+- **[apps/link-tools/](apps/link-tools/)** — link tool: Link Sheet → affiliate links → import CSV → social captions.
+- **[data/categories.csv](data/categories.csv)** · **[data/stores.csv](data/stores.csv)** — the 20 categories (with slugs) and the stores.
+
 ## Rules
 
 - Every page with affiliate links carries a clear affiliate disclosure (required by Amazon Associates).
@@ -22,3 +28,4 @@ Adyzio publishes product deals and recommendations using its own affiliate links
 ## Changelog
 
 - **2026-10-31** — Repository set up with folder structure.
+- **2026-10-31** — Launch plan, link tool (convert / validate / export / captions, with tests), category map, store list and Link Sheet template.
