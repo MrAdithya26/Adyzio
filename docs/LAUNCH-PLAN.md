@@ -49,7 +49,7 @@ You asked for scraping links. Here is the safe line, because breaking it can clo
 | ExtraPe's own converter (app, website or Chrome extension) | Guessing or building an ExtraPe/Flipkart link by hand |
 | Amazon **Creators API** for product data, once you qualify | Amazon PA-API: retired in 2026, replaced by the Creators API |
 
-**About the Creators API:** it is Amazon's official feed of titles, prices and images. Reports from developers say it needs a fully approved Associates account and about **10 qualifying sales in the last 30 days** – VERIFY the exact rule in Associates Central → Tools. So at launch you work by hand; once sales reach that level (Phase 4), the site can pull Amazon data automatically and keep prices fresh.
+**About the Creators API:** it is Amazon's official feed of titles, prices and images. Reports from developers say it needs a fully approved Associates account and about **10 qualifying sales in the last 30 days** – VERIFY the exact rule in Associates Central → Tools. So at launch you work by hand; once sales reach that level (Phase 5), the site can pull Amazon data automatically and keep prices fresh.
 
 **Amazon's first-sales rule:** new Associates accounts must make qualifying sales within the first 180 days or the account is closed – VERIFY the date for your account in Associates Central. This is why launch and the first sales matter more than polish.
 
@@ -131,7 +131,7 @@ The link tool writes ready captions for all of these from your site's product ex
 
 - [ ] **Amazon Associates:** add `adyzio.com` and every social profile under Account Settings → Websites and Mobile Apps (task adz-09). Copy your **tracking ID** (ends in `-21`).
 - [ ] **ExtraPe:** install the Chrome extension; check the store list and commission rates; note the short-link domain.
-- [ ] **Telegram:** create the channel "Adyzio Deals"; create a bot with @BotFather for auto-posting later (Phase 4); add the bot as channel admin.
+- [ ] **Telegram:** create the channel "Adyzio Deals"; create a bot with @BotFather for auto-posting later (Phase 5); add the bot as channel admin.
 - [ ] **WhatsApp:** create the channel "Adyzio Deals" from WhatsApp Business.
 - [ ] **Instagram, Facebook, X, Threads, Pinterest, YouTube, LinkedIn:** create with handle `adyzio` (or the closest free one); paste the descriptions written on 31 Oct; put `adyzio.com` in the bio link.
 - [ ] **Google:** Search Console (paste verification tag in Admin → Settings → Extra code in head), submit `sitemap.xml`; Google Analytics ID in Settings.
