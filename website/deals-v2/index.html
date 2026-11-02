@@ -91,6 +91,11 @@ nav.cats::-webkit-scrollbar{display:none}
 .sname{font-size:13px;color:var(--ink-2);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .srow{display:grid;grid-template-columns:1fr auto;gap:6px}
 .srow .buy{padding:8px;font-size:13px}
+.buy.act-book{background:#0e6fb8;color:#fff}
+.buy.act-visit{background:var(--surface);color:var(--deep);border:1.5px solid var(--deep)}
+.buy.act-apply{background:#7a2f8f;color:#fff}
+.buy.act-app{background:var(--ink);color:var(--bg)}
+.stile .shrow{margin-top:auto;gap:5px}.stile .swa,.stile .son{font-size:12px;padding:8px 4px;gap:4px}.stile .swa svg,.stile .son svg{width:14px;height:14px}.stile .srow{margin-top:auto}
 .sic{width:38px;border-radius:9px;border:1px solid var(--share);background:var(--surface);color:var(--share);display:grid;place-items:center;cursor:pointer}
 .gtag{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:center}
 .moreb{margin:16px auto 0;display:block}
@@ -342,14 +347,13 @@ footer .wrap{padding-block:24px;display:grid;gap:14px}
   </section>
 
   <section class="wrap dir" id="allstores" aria-labelledby="dirT">
-    <div class="bar"><h2 id="dirT" data-i="dirT">All stores</h2><span class="count" id="dirCount"></span></div>
+    <div class="bar"><h2 id="dirT" data-i="dirT">All Stores &amp; Offers</h2><span class="count" id="dirCount"></span></div>
     <div class="dirtools">
       <label class="search" for="sq"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="sq" type="search" placeholder="Search stores" autocomplete="off"></label>
       <div class="tabs" id="gtabs"></div>
     </div>
     <div class="az" id="az"></div>
     <div class="sgrid" id="sgrid"></div>
-    <button class="ghost moreb" id="moreStores" hidden></button>
   </section>
 
   <section class="join">
@@ -414,6 +418,12 @@ const STORES={};
 const STORE_LINKS={ /* flipkart:"https://…", amazon:"https://amzn.to/…" */ };
 Object.entries(STORE_LINKS).forEach(([k,v])=>{if(STORES[k])STORES[k].link=v});
 const TOP_STORES=["amazon","flipkart","myntra","ajio","meesho","shopsy","nykaa","tatacliq","croma","boat","jiomart","decathlon","pantaloons","pepperfry","noise","levi-s"];
+/* What the main button does for each store.
+   buy = "Buy Now" · book = "Book Now" · visit = "Visit Store" · apply = "Apply Now" · app = "Get App" · share = share buttons only (no direct button)
+   Default comes from the store's group; set any store here to change it. */
+const GROUP_ACTION={shopping:"buy",travel:"book",finance:"share",services:"visit"};
+const STORE_ACTION={ /* e.g. "kotak-811":"app", "hostinger":"buy", "hdfc-personal-loan":"apply" */ };
+const actionOf=k=>STORE_ACTION[k]||(/\bapp\b/i.test(STORES[k].n)?"app":GROUP_ACTION[STORES[k].g]||"buy");
 const GROUPS=[["all","All stores","అన్ని stores"],["shopping","Shopping","షాపింగ్"],["travel","Travel","ప్రయాణం"],["finance","Cards & Finance","కార్డులు & ఫైనాన్స్"],["services","Apps & Services","యాప్స్ & సేవలు"]];
 const CATS=[["all","All","అన్నీ"],["electronics","Electronics","ఎలక్ట్రానిక్స్"],["mobiles","Mobiles","మొబైల్స్"],["fashion","Fashion","ఫ్యాషన్"],["home","Home & Kitchen","ఇల్లు & వంటగది"],["beauty","Beauty","బ్యూటీ"],["study","Students","విద్యార్థులు"],["festive","Festive & Decor","పండుగ"],["fitness","Sports & Fitness","ఫిట్‌నెస్"],["kids","Kids & Toys","పిల్లలు"]];
 
@@ -466,7 +476,7 @@ const TXT={
  te:{tag:"డీల్స్",saved:"సేవ్",demoA:"డిజైన్ ప్రివ్యూ.",demoB:"క్రింది products, prices, links అన్నీ samples. Live చేసే ముందు మీ SiteStripe, ExtraPe links పెట్టండి.",
   eye:"Amazon · Flipkart · Myntra · AJIO · Nykaa · Tata CLiQ · ఇంకా మరెన్నో",h1:"ఇండియాలోని మంచి డీల్స్ అన్నీ, <em>చెక్ చేసి</em> మీకు అందిస్తాం.",
   lede:"లూట్ డీల్స్, ధర తగ్గిన products, బడ్జెట్ picks Amazon మరియు ExtraPe stores అన్నింటి నుండి ఒకే చోట. ప్రతి card లో ఎవరికి సరిపోతుందో, ధర ఎప్పుడు చెక్ చేశామో ఉంటుంది. కొనడం ఎప్పుడూ store site లోనే.",
-  fType:"డీల్ రకం",loot:"లూట్ డీల్",today:"ఈరోజు డీల్",drop:"ధర తగ్గింది",fPrice:"ధర (₹)",fOff:"కనీస డిస్కౌంట్",fSort:"క్రమం",reset:"Filters తీసేయండి",dirT:"అన్ని stores",offT:"స్టోర్ ఆఫర్లు",offS:"ప్రతి store sale, coupon డీల్స్",all:"అన్ని డీల్స్",
+  fType:"డీల్ రకం",loot:"లూట్ డీల్",today:"ఈరోజు డీల్",drop:"ధర తగ్గింది",fPrice:"ధర (₹)",fOff:"కనీస డిస్కౌంట్",fSort:"క్రమం",reset:"Filters తీసేయండి",dirT:"అన్ని Stores & ఆఫర్స్",offT:"స్టోర్ ఆఫర్లు",offS:"ప్రతి store sale, coupon డీల్స్",all:"అన్ని డీల్స్",
   jH:"లూట్ డీల్స్ అయిపోకముందే పొందండి",jP:"Telegram, WhatsApp లో free alerts. రోజుకు 5–15 picks, spam లేదు.",jT:"Telegram లో చేరండి",jW:"WhatsApp లో చేరండి",
   s1:"డీల్ ఎంచుకోండి",s1p:"Store, category, budget లేదా డీల్ రకంతో filter చేయండి. నచ్చినవి heart తో save చేయండి.",
   s2:"ఎవరికి సరిపోతుందో చదవండి",s2p:"\"సరిపోయేది\" line మీ అవసరానికి తగినదో చెబుతుంది. కొనే ముందు చెక్ చేయాల్సినవి Details లో ఉంటాయి.",
@@ -476,8 +486,8 @@ const TXT={
   q3:"ధరలు live గా ఉంటాయా?",a3:"లేదు. ప్రతి card లో మేము చూసిన ధర, సమయం ఉంటాయి. కొనే ముందు store page లో confirm చేయండి.",
   q4:"Ratings, reviews చూపిస్తారా?",a4:"లేదు. Ratings store page లోనే ఉంటాయి. మేము ఎవరికి సరిపోతుందో మాత్రమే రాస్తాం."}
 };
-const L={en:{good:"Good for",check:"Check latest price",checked:"Checked",buy:"Buy Now",details:"Details",results:"deals",none:"No deals match these filters.",saved:"Saved deals",copy:"Copy share link",copied:"Link copied",sample:"Sample",ends:"Ends in",before:"Check before you buy",loot:"Loot",today:"Today",drop:"Price drop",dotd:"Deal of the hour",offT:"Store offers",dealOffer:"Deal Offer",tc:"*T&C APPLY",startPrice:"Starting Price",onEvery:"On",liveNow:"Live now",mrp:"MRP",seeDeal:"See deal",code:"Code",lootL:"Loot Deal",todayL:"Get Today",dropL:"Price Drop",under:"Under",all:"All deals",close:"Close",share:"Share",shareOn:"Share On",copyLink:"Copy link",shareVia:"Share this deal",tgSub:"Send to a chat or group",mailSub:"Opens your email app",waSub:"Send to a contact or group"},
- te:{good:"సరిపోయేది",check:"తాజా ధర చూడండి",checked:"చెక్ చేసింది",buy:"ఇప్పుడే కొనండి",details:"వివరాలు",results:"డీల్స్",none:"ఈ filters కి డీల్స్ లేవు.",saved:"సేవ్ చేసిన డీల్స్",copy:"Share link కాపీ",copied:"Link కాపీ అయింది",sample:"Sample",ends:"ముగింపు",before:"కొనే ముందు చెక్ చేయండి",loot:"లూట్",today:"ఈరోజు",drop:"ధర తగ్గింది",dotd:"ఈ గంట డీల్",offT:"స్టోర్ ఆఫర్లు",dealOffer:"డీల్ ఆఫర్",tc:"*నిబంధనలు వర్తిస్తాయి",startPrice:"ప్రారంభ ధర",onEvery:"",liveNow:"ఇప్పుడు live",mrp:"MRP",seeDeal:"డీల్ చూడండి",code:"Code",lootL:"లూట్ డీల్",todayL:"ఈరోజే",dropL:"ధర తగ్గింది",under:"లోపు",all:"అన్ని డీల్స్",close:"మూసివేయండి",share:"షేర్",shareOn:"షేర్ చేయండి",copyLink:"Link కాపీ",shareVia:"ఈ డీల్ షేర్ చేయండి",tgSub:"Chat లేదా group కి పంపండి",mailSub:"మీ email app ఓపెన్ అవుతుంది",waSub:"Contact లేదా group కి పంపండి"}};
+const L={en:{good:"Good for",check:"Check latest price",checked:"Checked",buy:"Buy Now",details:"Details",results:"deals",none:"No deals match these filters.",saved:"Saved deals",copy:"Copy share link",copied:"Link copied",sample:"Sample",ends:"Ends in",before:"Check before you buy",loot:"Loot",today:"Today",drop:"Price drop",dotd:"Deal of the hour",a_buy:"Buy Now",a_book:"Book Now",a_visit:"Visit Store",a_apply:"Apply Now",a_app:"Get App",a_share:"Share only",offT:"Store offers",dealOffer:"Deal Offer",tc:"*T&C APPLY",startPrice:"Starting Price",onEvery:"On",liveNow:"Live now",mrp:"MRP",seeDeal:"See deal",code:"Code",lootL:"Loot Deal",todayL:"Get Today",dropL:"Price Drop",under:"Under",all:"All deals",close:"Close",share:"Share",shareOn:"Share On",copyLink:"Copy link",shareVia:"Share this deal",tgSub:"Send to a chat or group",mailSub:"Opens your email app",waSub:"Send to a contact or group"},
+ te:{good:"సరిపోయేది",check:"తాజా ధర చూడండి",checked:"చెక్ చేసింది",buy:"ఇప్పుడే కొనండి",details:"వివరాలు",results:"డీల్స్",none:"ఈ filters కి డీల్స్ లేవు.",saved:"సేవ్ చేసిన డీల్స్",copy:"Share link కాపీ",copied:"Link కాపీ అయింది",sample:"Sample",ends:"ముగింపు",before:"కొనే ముందు చెక్ చేయండి",loot:"లూట్",today:"ఈరోజు",drop:"ధర తగ్గింది",dotd:"ఈ గంట డీల్",a_buy:"ఇప్పుడే కొనండి",a_book:"బుక్ చేయండి",a_visit:"Store చూడండి",a_apply:"అప్లై చేయండి",a_app:"యాప్ పొందండి",a_share:"షేర్ మాత్రమే",offT:"స్టోర్ ఆఫర్లు",dealOffer:"డీల్ ఆఫర్",tc:"*నిబంధనలు వర్తిస్తాయి",startPrice:"ప్రారంభ ధర",onEvery:"",liveNow:"ఇప్పుడు live",mrp:"MRP",seeDeal:"డీల్ చూడండి",code:"Code",lootL:"లూట్ డీల్",todayL:"ఈరోజే",dropL:"ధర తగ్గింది",under:"లోపు",all:"అన్ని డీల్స్",close:"మూసివేయండి",share:"షేర్",shareOn:"షేర్ చేయండి",copyLink:"Link కాపీ",shareVia:"ఈ డీల్ షేర్ చేయండి",tgSub:"Chat లేదా group కి పంపండి",mailSub:"మీ email app ఓపెన్ అవుతుంది",waSub:"Contact లేదా group కి పంపండి"}};
 
 const store=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k));localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}};
 const st={cat:"all",stores:new Set(),types:new Set(),q:"",min:"",max:"",minoff:0,sort:"hot",under:0,wish:new Set(store("adz-wish")||[]),onlyWish:false,lang:store("adz-lang")||"en"};
@@ -495,7 +505,7 @@ function countdown(iso){const d=new Date(iso)-Date.now();if(d<=0)return null;con
 
 function buildChrome(){
   $("#cats").innerHTML=CATS.map(([k,en,te])=>`<button class="chip" data-c="${k}" aria-pressed="${st.cat===k}">${st.lang==="te"?te:en}</button>`).join("");
-  $("#stores").innerHTML=TOP_STORES.filter(k=>STORES[k]).map(k=>`<button class="stag" data-s="${k}" aria-pressed="${st.stores.has(k)}" aria-label="${esc(STORES[k].n)}" title="${esc(STORES[k].n)}">${STORES[k].logo?`<img src="${STORES[k].logo}" alt="${esc(STORES[k].n)}">`:esc(STORES[k].n)}</button>`).join("")+`<a class="stag more" href="#allstores">${Object.keys(STORES).length} ${st.lang==="te"?"stores అన్నీ":"stores →"}</a>`;
+  $("#stores").innerHTML=TOP_STORES.filter(k=>STORES[k]).map(k=>`<button class="stag" data-s="${k}" aria-pressed="${st.stores.has(k)}" aria-label="${esc(STORES[k].n)}" title="${esc(STORES[k].n)}">${STORES[k].logo?`<img src="${STORES[k].logo}" alt="${esc(STORES[k].n)}">`:esc(STORES[k].n)}</button>`).join("")+`<a class="stag more" href="#allstores">${st.lang==="te"?"అన్ని stores →":"All stores →"}</a>`;
   if(0)Object.entries(STORES).map(([k,v])=>`<button class="stag" data-s="${k}" aria-pressed="${st.stores.has(k)}"><span class="dotd" style="background:${v.c}"></span>${v.n}</button>`).join("");
   $("#quick").innerHTML=[199,499,999,1999].map(u=>`<button class="qk" data-u="${u}" aria-pressed="${st.under===u}">${st.lang==="te"?inr(u)+" "+tl("under"):tl("under")+" "+inr(u)}</button>`).join("");
   document.querySelectorAll("[data-i]").forEach(el=>{const k=el.dataset.i;if(!el.dataset.en)el.dataset.en=el.innerHTML;el.innerHTML=st.lang==="te"&&TXT.te[k]?TXT.te[k]:el.dataset.en;el.classList.toggle("te",st.lang==="te"&&!!TXT.te[k])});
@@ -524,6 +534,10 @@ function filtered(){
   return r.sort(by[st.sort]);
 }
 
+function actBtn(k,link){
+  const a=actionOf(k); if(a==="share") return "";
+  return `<a class="buy act-${a}" href="${esc(link||"#add-your-extrape-link")}" target="_blank" rel="sponsored nofollow noopener">${tl("a_"+a)}</a>`;
+}
 function storeMark(k){
   const st_=STORES[k];
   if(st_.logo) return `<img src="${esc(st_.logo)}" alt="${esc(st_.n)}" loading="lazy">`;
@@ -551,7 +565,7 @@ function offerCard(o){
      <div class="sep"></div>
      <div><span class="pillg">${STORES[o.s].n}</span><strong ${cd?`data-end="${o.ends}" style="color:var(--hot)"`:""}>${cd?`${tl("ends")} ${cd}`:tl("liveNow")}</strong></div>
    </div>
-   <a class="buy" href="${esc(o.link)}" target="_blank" rel="sponsored nofollow noopener">${tl("buy")}</a>
+   ${actBtn(o.s,o.link)}
    ${shareBlock(o)}
   </article>`;
 }
@@ -635,13 +649,12 @@ function renderDir(){
   const list=Object.entries(STORES).filter(([k,v])=>(dir.g==="all"||v.g===dir.g)&&(!q||v.n.toLowerCase().includes(q))&&(!dir.l||(dir.l==="#"?/^[^a-z]/i.test(v.n):v.n[0].toUpperCase()===dir.l)))
     .sort((a,b)=>(TOP_STORES.indexOf(a[0])+1||999)-(TOP_STORES.indexOf(b[0])+1||999)||a[1].n.localeCompare(b[1].n));
   $("#dirCount").textContent=`${list.length} ${st.lang==="te"?"stores":"stores"}`;
-  const show=list.slice(0,dir.n);
+  const show=list;
   $("#sgrid").innerHTML=show.length?show.map(([k,v])=>`<div class="stile">
      <div class="slogo">${v.logo?`<img src="${v.logo}" alt="${esc(v.n)}" loading="lazy">`:`<span class="stxt">${esc(v.n)}</span>`}</div>
      <div class="sname" title="${esc(v.n)}">${esc(v.n)}</div>
-     <div class="srow"><a class="buy" href="${esc(v.link||"#add-your-extrape-link")}" target="_blank" rel="sponsored nofollow noopener">${tl("buy")}</a><button class="sic" data-sh="st-${k}" aria-label="Share ${esc(v.n)}">${ICO.share}</button></div>
+     ${actionOf(k)==="share"?`<div class="shrow"><a class="swa" href="${waHref(storeItem(k))}" target="_blank" rel="noopener">${ICO.wa}${tl("share")}</a><button class="son" data-sh="st-${k}">${ICO.share}${tl("shareOn")}</button></div>`:`<div class="srow">${actBtn(k,v.link)}<button class="sic" data-sh="st-${k}" aria-label="Share ${esc(v.n)}">${ICO.share}</button></div>`}
    </div>`).join(""):`<div class="empty">${tl("none")}</div>`;
-  const mb=$("#moreStores"); mb.hidden=list.length<=dir.n; mb.textContent=(st.lang==="te"?"మరిన్ని stores చూపించు":"Show all ")+` (${list.length})`;
 }
 function openShare(id){
   const p=findAny(id);
@@ -664,9 +677,8 @@ document.addEventListener("click",e=>{
   else if(b.dataset.s){const s=b.dataset.s;st.stores.has(s)?st.stores.delete(s):st.stores.add(s);all()}
   else if(b.dataset.u){const u=+b.dataset.u;st.under=st.under===u?0:u;all()}
   else if(b.dataset.w){const id=+b.dataset.w;st.wish.has(id)?st.wish.delete(id):st.wish.add(id);store("adz-wish",[...st.wish]);render()}
-  else if(b.dataset.g){dir.g=b.dataset.g;dir.n=48;renderDir()}
-  else if(b.dataset.l!==undefined&&b.closest("#az")){dir.l=b.dataset.l;dir.n=48;renderDir()}
-  else if(b.id==="moreStores"){dir.n=9999;renderDir()}
+  else if(b.dataset.g){dir.g=b.dataset.g;renderDir()}
+  else if(b.dataset.l!==undefined&&b.closest("#az")){dir.l=b.dataset.l;renderDir()}
   else if(b.dataset.sh){openShare(b.dataset.sh)}
   else if(b.dataset.d){openD(b.dataset.d)}
   else if(b.id==="closeM"){$("#scrim").hidden=true}
@@ -681,7 +693,7 @@ document.addEventListener("click",e=>{
 $("#scrim").addEventListener("click",e=>{if(e.target.id==="scrim")$("#scrim").hidden=true});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#scrim").hidden=true});
 $("#q").addEventListener("input",e=>{st.q=e.target.value;render()});
-$("#sq").addEventListener("input",e=>{dir.q=e.target.value;dir.n=48;renderDir()});
+$("#sq").addEventListener("input",e=>{dir.q=e.target.value;renderDir()});
 $("#pmin").addEventListener("input",e=>{st.min=e.target.value;render()});
 $("#pmax").addEventListener("input",e=>{st.max=e.target.value;render()});
 $("#minoff").addEventListener("change",e=>{st.minoff=+e.target.value;render()});
