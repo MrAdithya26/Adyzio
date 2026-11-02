@@ -3,6 +3,12 @@
 Adyzio link tool - turns your Link Sheet into an import file for adyzio.com.
 
 Steps (each is one command):
+  collect   Read deal posts you saved (WhatsApp/Telegram exports, copied text,
+            saved deal pages), pull out store links, remove other people's
+            affiliate tags, add yours, and fill the Excel/CSV Link Sheet.
+  extrape-out / extrape-in
+            Write the links that need ExtraPe into one text file, then read the
+            converted links back into the sheet.
   convert   Clean product links, detect the store, add your Amazon tag.
             Non-Amazon links are marked CONVERT_IN_EXTRAPE.
   validate  Check every row before import (tags, categories, prices, fields).
@@ -13,7 +19,12 @@ Steps (each is one command):
 Rules built in:
   * It never invents a tracking ID. Your Amazon tag comes from config.json.
   * It never fetches or copies store pages, prices or photos. It works only
-    on links and text you put in the sheet.
+    on links and text you give it. (collect may follow a short link's redirect
+    to find the product it points to; it does not load the page.)
+  * Amazon rule: prices and images for Amazon products are kept in the sheet
+    for your own use but are NOT exported to the site (Amazon allows them only
+    from its API). The site shows "Check latest price" instead.
+  * Works with .xlsx (Excel) or .csv sheets. Excel needs: pip install openpyxl
   * A price needs a price_checked_on date; old prices are flagged.
 
 Python 3.8+, standard library only. Run:  python3 adyzio_links.py --help
@@ -36,7 +47,7 @@ SHEET_COLS = [
     "brand", "price", "mrp", "price_checked_on", "image", "gallery",
     "video_url", "short_desc", "features", "description", "is_deal",
     "is_featured", "is_active", "deal_type", "deal_ends", "added_on",
-    "posted_channels", "notes",
+    "posted_channels", "source", "raw_url", "price_seen", "mrp_seen", "notes",
 ]
 
 # Exactly the columns admin/import.php reads (adyzio website v1.x).
@@ -55,6 +66,14 @@ STORE_HOSTS = {
     "nykaa": ["nykaa."],
     "tatacliq": ["tatacliq."],
     "croma": ["croma."],
+    "shopsy": ["shopsy."],
+    "jiomart": ["jiomart."],
+    "decathlon": ["decathlon."],
+    "pepperfry": ["pepperfry."],
+    "snapdeal": ["snapdeal."],
+    "firstcry": ["firstcry."],
+    "lenskart": ["lenskart."],
+    "boat": ["boat-lifestyle."],
 }
 STORES = list(STORE_HOSTS) + ["other"]
 
@@ -67,6 +86,8 @@ JUNK_PARAMS = {
     "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid",
     "gclid", "srno", "otracker", "otracker1", "iid", "ssid", "lid",
     "marketplace", "store", "spotlightTagId", "fm", "ppt", "ppn", "cmpid",
+    # someone else's affiliate IDs - never keep them on a source link
+    "tag", "ascsubtag", "creative", "creativeASIN", "camp", "affid", "affExtParam1", "affExtParam2",
 }
 
 ASIN_RE = re.compile(r"/(?:dp|gp/product|gp/aw/d|exec/obidos/ASIN|o/ASIN)/([A-Z0-9]{10})(?:[/?]|$)", re.I)
@@ -169,6 +190,76 @@ def write_csv(path: Path, rows, cols):
             w.writerow({c: r.get(c, "") for c in cols})
 
 
+STATUS_FILL = {"READY": "C6EFCE", "READY_CHECK": "FFF2CC", "ERROR": "F8CBAD", "CHECK": "DDEBF7",
+               "CONVERT_IN_EXTRAPE": "FCE4D6", "OPEN_SHORT_LINK": "F8CBAD", "NO_TAG": "F8CBAD",
+               "USE_SITESTRIPE": "FCE4D6", "NEEDS_AMAZON_TAG": "F8CBAD"}
+
+
+def _openpyxl():
+    try:
+        import openpyxl
+        return openpyxl
+    except ImportError:
+        sys.exit("Excel files need one extra package. Run this once:\n    pip install openpyxl\n"
+                 "(or use a .csv sheet instead)")
+
+
+def read_rows(path: Path):
+    """Read the Link Sheet from .xlsx or .csv."""
+    path = Path(path)
+    if path.suffix.lower() != ".xlsx":
+        return read_csv(path)
+    wb = _openpyxl().load_workbook(path, read_only=True, data_only=True)
+    ws = wb["Links"] if "Links" in wb.sheetnames else wb.worksheets[0]
+    it = ws.iter_rows(values_only=True)
+    head = [str(h or "").strip() for h in next(it, [])]
+    rows = []
+    for vals in it:
+        if not any(v not in (None, "") for v in vals):
+            continue
+        r = {}
+        for k, v in zip(head, vals):
+            if not k:
+                continue
+            if isinstance(v, (dt.datetime, dt.date)):
+                v = v.strftime("%Y-%m-%d")
+            elif isinstance(v, float) and v.is_integer():
+                v = str(int(v))
+            r[k] = "" if v is None else str(v).strip()
+        rows.append(r)
+    wb.close()
+    return rows
+
+
+def write_rows(path: Path, rows, cols):
+    """Write the Link Sheet as .xlsx (formatted) or .csv."""
+    path = Path(path)
+    if path.suffix.lower() != ".xlsx":
+        return write_csv(path, rows, cols)
+    ox = _openpyxl()
+    from openpyxl.styles import Font, PatternFill, Alignment
+    wb = ox.Workbook(); ws = wb.active; ws.title = "Links"
+    ws.append(cols)
+    for c in ws[1]:
+        c.font = Font(bold=True, color="FFFFFF"); c.fill = PatternFill("solid", fgColor="2A2470")
+    for r in rows:
+        ws.append([r.get(c, "") for c in cols])
+    widths = {"status": 20, "source_url": 45, "affiliate_url": 45, "title": 45, "description": 40,
+              "short_desc": 30, "features": 30, "image": 30, "notes": 40, "raw_url": 35, "source": 22}
+    for i, c in enumerate(cols, start=1):
+        ws.column_dimensions[ox.utils.get_column_letter(i)].width = widths.get(c, 14)
+    st_col = cols.index("status") + 1 if "status" in cols else None
+    if st_col:
+        for row in ws.iter_rows(min_row=2, min_col=st_col, max_col=st_col):
+            c = row[0]; key = str(c.value or "")
+            if key in STATUS_FILL:
+                c.fill = PatternFill("solid", fgColor=STATUS_FILL[key])
+    ws.freeze_panes = "C2"
+    ws.auto_filter.ref = ws.dimensions
+    path.parent.mkdir(parents=True, exist_ok=True)
+    wb.save(path)
+
+
 def load_config(path):
     cfg = {}
     if path and Path(path).exists():
@@ -200,13 +291,34 @@ def parse_date(s: str):
 # ----------------------------------------------------------------- commands
 def cmd_convert(a):
     cfg = load_config(a.config)
-    tag = (a.amazon_tag or cfg.get("amazon_tag", "")).strip()
+    tag = amazon_tag_from(a, cfg)
+    rows = read_rows(Path(a.input))
+    counts = convert_rows(rows, tag)
+    out = Path(a.output or a.input)
+    write_rows(out, rows, SHEET_COLS)
+    print(f"Wrote {len(rows)} rows to {out}")
+    for k, v in sorted(counts.items()):
+        print(f"  {k:20} {v}")
+    print("\nNext: paste ExtraPe links into affiliate_url for CONVERT_IN_EXTRAPE rows "
+          "(or use extrape-out / extrape-in), fill title/category, then run validate.")
+
+
+def amazon_tag_from(a, cfg):
+    tag = (getattr(a, "amazon_tag", None) or cfg.get("amazon_tag", "")).strip()
     if tag and not re.fullmatch(r"[A-Za-z0-9_-]+-2\d", tag):
         sys.exit(f"Amazon tag '{tag}' does not look like an Amazon India tracking ID (e.g. yourname-21). "
                  "Copy it from Associates Central.")
-    rows = read_csv(Path(a.input))
+    return tag
+
+
+def convert_rows(rows, tag, only=None):
     counts = {}
     for r in rows:
+        if only is not None and id(r) not in only:
+            continue
+        if r.get("status") in ("OPEN_SHORT_LINK",):
+            counts[r["status"]] = counts.get(r["status"], 0) + 1
+            continue
         src = r.get("source_url", "")
         aff = r.get("affiliate_url", "")
         if not src and not aff:
@@ -234,13 +346,7 @@ def cmd_convert(a):
             else:
                 r["status"] = "CONVERT_IN_EXTRAPE"
         counts[r["status"]] = counts.get(r["status"], 0) + 1
-    out = Path(a.output or a.input)
-    write_csv(out, rows, SHEET_COLS)
-    print(f"Wrote {len(rows)} rows to {out}")
-    for k, v in sorted(counts.items()):
-        print(f"  {k:20} {v}")
-    print("\nNext: paste ExtraPe links into affiliate_url for CONVERT_IN_EXTRAPE rows, "
-          "fill title/category, then run validate.")
+    return counts
 
 
 def validate_rows(rows, cat_slugs, cat_names, max_price_age):
@@ -281,6 +387,9 @@ def validate_rows(rows, cat_slugs, cat_names, max_price_age):
             errs.append(f"category '{r['category']}' is not in data/categories.csv "
                         "(the site would create a new, stray category)")
         price, mrp = r.get("price", ""), r.get("mrp", "")
+        if store == "amazon" and (price or mrp or r.get("image")):
+            warns.append("Amazon price/image stay in the sheet only; the site shows 'Check latest price' (Amazon rule)")
+            price = mrp = ""
         for label, v in (("price", price), ("mrp", mrp)):
             if v and not re.fullmatch(r"\d+(\.\d{1,2})?", v.replace(",", "")):
                 errs.append(f"{label} '{v}' must be a plain number like 1299 (no ₹)")
@@ -300,7 +409,7 @@ def validate_rows(rows, cat_slugs, cat_names, max_price_age):
         for f in ("is_deal", "is_featured", "is_active"):
             if r.get(f, "") not in ("", "0", "1"):
                 errs.append(f"{f} must be 0 or 1")
-        img = r.get("image", "")
+        img = "" if store == "amazon" else r.get("image", "")
         if img and not img.lower().startswith("https://"):
             errs.append("image must be an https:// URL (SiteStripe image link or your own upload)")
         if r.get("deal_ends"):
@@ -315,10 +424,10 @@ def validate_rows(rows, cat_slugs, cat_names, max_price_age):
 
 
 def cmd_validate(a):
-    rows = read_csv(Path(a.input))
+    rows = read_rows(Path(a.input))
     cat_slugs, cat_names = load_categories(Path(a.categories))
     issues = validate_rows(rows, cat_slugs, cat_names, a.max_price_age)
-    write_csv(Path(a.input), rows, SHEET_COLS)
+    write_rows(Path(a.input), rows, SHEET_COLS)
     for row_no, level, msg in issues:
         print(f"row {row_no:>4}  {level:5}  {msg}")
     n_err = sum(1 for r in rows if r.get("status") == "ERROR")
@@ -328,10 +437,10 @@ def cmd_validate(a):
 
 
 def cmd_export(a):
-    rows = read_csv(Path(a.input))
+    rows = read_rows(Path(a.input))
     cat_slugs, cat_names = load_categories(Path(a.categories))
     validate_rows(rows, cat_slugs, cat_names, a.max_price_age)
-    write_csv(Path(a.input), rows, SHEET_COLS)  # keep the status column current
+    write_rows(Path(a.input), rows, SHEET_COLS)  # keep the status column current
     ready = [r for r in rows if r.get("status", "").startswith("READY")]
     out = []
     for r in ready:
@@ -341,6 +450,8 @@ def cmd_export(a):
         o["store"] = r.get("store") or detect_store(r.get("source_url", ""))
         o["price"] = o["price"].replace(",", "")
         o["mrp"] = o["mrp"].replace(",", "")
+        if o["store"] == "amazon":  # Amazon allows prices/images only from its own API
+            o["price"] = o["mrp"] = o["image"] = o["gallery"] = ""
         o["is_active"] = o["is_active"] or "1"
         o["is_deal"] = o["is_deal"] or ("1" if r.get("deal_type") else "0")
         o["is_featured"] = o["is_featured"] or "0"
@@ -349,6 +460,118 @@ def cmd_export(a):
     skipped = len([r for r in rows if r.get("status") not in ("EMPTY",)]) - len(out)
     print(f"Wrote {len(out)} products to {a.output} ({skipped} not ready, left out).")
     print("Upload it in adyzio.com/admin -> Import / Export.")
+
+
+def cmd_collect(a):
+    import deal_collect as DC
+    cfg = load_config(a.config)
+    tag = amazon_tag_from(a, cfg)
+    files = []
+    for x in a.sources:
+        p = Path(x)
+        if p.is_dir():
+            files += sorted(f for f in p.rglob("*") if f.suffix.lower() in (".txt", ".json", ".html", ".htm", ".csv", ".md"))
+        elif p.exists():
+            files.append(p)
+        else:
+            print(f"  skipped (not found): {x}")
+    if not files:
+        sys.exit("No source files found. Save deal posts as .txt (copied text or WhatsApp export), "
+                 ".json (Telegram Desktop export) or .html (saved page) and pass the file or folder.")
+    sheet = Path(a.sheet)
+    rows = read_rows(sheet) if sheet.exists() else []
+    by_key = {}
+    for r in rows:
+        u = r.get("source_url", "")
+        if u:
+            by_key[DC.product_key(r.get("store") or detect_store(u), u)] = r
+    cache, new, merged, short_fail = {}, [], 0, 0
+    posts = 0
+    for f in files:
+        for post in DC.read_posts(f):
+            posts += 1
+            for c in DC.rows_from_post(post, detect_store, expand_links=not a.no_expand, cache=cache):
+                if "problem" in c:
+                    short_fail += 1
+                    if not any(r.get("raw_url") == c["raw_url"] for r in rows):
+                        r = {"status": "OPEN_SHORT_LINK", "raw_url": c["raw_url"], "source": post.get("source", ""),
+                             "added_on": today().isoformat(), "notes": c["problem"]}
+                        rows.append(r)
+                    continue
+                k = c["key"]
+                if k in by_key:
+                    r = by_key[k]
+                    srcs = [s for s in r.get("source", "").split(" | ") if s]
+                    if c["source"] and c["source"] not in srcs:
+                        r["source"] = " | ".join(srcs + [c["source"]]); merged += 1
+                    for fld in ("title", "price_seen", "mrp_seen"):
+                        if not r.get(fld) and c.get(fld):
+                            r[fld] = c[fld]
+                    continue
+                r = {"source_url": c["source_url"], "store": c["store"] if c["store"] in STORES else "other",
+                     "raw_url": c["raw_url"], "title": c["title"], "source": c["source"],
+                     "price_seen": c["price_seen"], "mrp_seen": c["mrp_seen"],
+                     "added_on": today().isoformat(), "is_active": "1"}
+                if c["store"] != "amazon" and c["price_seen"]:
+                    r["price"], r["mrp"] = c["price_seen"], c["mrp_seen"]
+                    r["price_checked_on"] = c["date"] or today().isoformat()
+                    r["notes"] = f"price from {c['source']} post - check it on the store page"
+                if c.get("date"):
+                    r["is_deal"] = "1"
+                rows.append(r); by_key[k] = r; new.append(r)
+    counts = convert_rows(rows, tag, only={id(r) for r in new})
+    write_rows(sheet, rows, SHEET_COLS)
+    print(f"Read {posts} posts from {len(files)} file(s).")
+    print(f"  new products     {len(new)}")
+    print(f"  already in sheet {merged} (source added)")
+    if short_fail:
+        print(f"  short links not opened {short_fail} (status OPEN_SHORT_LINK - open them and paste the store link into source_url)")
+    for k, v in sorted(counts.items()):
+        print(f"  {k:20} {v}")
+    print(f"\nSaved: {sheet}")
+    print("Next: python adyzio_links.py extrape-out " + str(sheet) + "   (then paste the batch into ExtraPe)")
+
+
+EXTRAPE_LINE = re.compile(r"\bR(\d+)\b\D{0,5}(https?://\S+)")
+
+
+def cmd_extrape_out(a):
+    rows = read_rows(Path(a.input))
+    lines = []
+    for i, r in enumerate(rows, start=2):
+        if r.get("status") == "CONVERT_IN_EXTRAPE" and r.get("source_url"):
+            lines.append(f"R{i} {r['source_url']}")
+    for start in range(0, len(lines), a.batch):
+        part = lines[start:start + a.batch]
+        out = Path(a.output) if len(lines) <= a.batch else Path(a.output).with_name(
+            f"{Path(a.output).stem}-{start // a.batch + 1}{Path(a.output).suffix}")
+        out.write_text("\n".join(part) + "\n", encoding="utf-8")
+        print(f"Wrote {len(part)} links to {out}")
+    if not lines:
+        print("No rows waiting for ExtraPe.")
+        return
+    print("\nPaste each file's text into the ExtraPe converter (bot, website or app). Keep the R-numbers.\n"
+          "Save ExtraPe's reply as a text file and run:\n"
+          f"  python adyzio_links.py extrape-in {a.input} converted.txt")
+
+
+def cmd_extrape_in(a):
+    rows = read_rows(Path(a.input))
+    text = Path(a.converted).read_text(encoding="utf-8", errors="ignore")
+    filled = bad = 0
+    for m in EXTRAPE_LINE.finditer(text):
+        n, link = int(m.group(1)), m.group(2).rstrip(".,;)")
+        idx = n - 2
+        if not (0 <= idx < len(rows)):
+            print(f"  R{n}: no such row"); bad += 1; continue
+        r = rows[idx]
+        if detect_store(link) == r.get("store") and affiliate_ok(link, r.get("store", "")) in ("missing", "plain"):
+            print(f"  R{n}: still the plain store link - ExtraPe did not convert it"); bad += 1; continue
+        r["affiliate_url"] = link
+        r["status"] = "CHECK"
+        filled += 1
+    write_rows(Path(a.input), rows, SHEET_COLS)
+    print(f"Filled {filled} affiliate links, {bad} problems. Next: validate {a.input}")
 
 
 CAPTION_TEMPLATES = {
@@ -414,6 +637,25 @@ def main(argv=None):
     c.add_argument("--config", default=str(HERE / "config.json"))
     c.add_argument("--amazon-tag", help="your Associates tracking ID, e.g. yourname-21")
     c.set_defaults(fn=cmd_convert)
+
+    co = sub.add_parser("collect", help="read saved deal posts and fill the sheet")
+    co.add_argument("sources", nargs="+", help="files or folders: .txt, .json (Telegram export), .html")
+    co.add_argument("--sheet", default="deals.xlsx", help="Link Sheet to fill (.xlsx or .csv), default deals.xlsx")
+    co.add_argument("--config", default=str(HERE / "config.json"))
+    co.add_argument("--amazon-tag", help="override the tracking ID from config.json")
+    co.add_argument("--no-expand", action="store_true", help="do not open short links (amzn.to, fkrt.it...)")
+    co.set_defaults(fn=cmd_collect)
+
+    xo = sub.add_parser("extrape-out", help="write links that need ExtraPe into a text file")
+    xo.add_argument("input")
+    xo.add_argument("-o", "--output", default="extrape-batch.txt")
+    xo.add_argument("--batch", type=int, default=25, help="links per file (default 25)")
+    xo.set_defaults(fn=cmd_extrape_out)
+
+    xi = sub.add_parser("extrape-in", help="read ExtraPe's converted links back into the sheet")
+    xi.add_argument("input")
+    xi.add_argument("converted", help="text file with ExtraPe's reply (lines like 'R5 https://...')")
+    xi.set_defaults(fn=cmd_extrape_in)
 
     v = sub.add_parser("validate", help="check rows before import")
     v.add_argument("input")
