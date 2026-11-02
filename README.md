@@ -27,5 +27,6 @@ Adyzio publishes product deals and recommendations using its own affiliate links
 
 ## Changelog
 
+- **2026-11-02** — Deals page v2 design (`website/deals-v2/`): store offer cards, logo product cards, share buttons, 272-store directory from ExtraPe (`data/extrape-stores.csv`).
 - **2026-10-31** — Repository set up with folder structure.
 - **2026-10-31** — Launch plan, link tool (convert / validate / export / captions, with tests), category map, store list and Link Sheet template.

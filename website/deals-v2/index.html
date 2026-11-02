@@ -1,0 +1,693 @@
+<title>Adyzio Deals</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<script src="assets/stores.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;600&display=swap">
+<style>
+/* Layout: sticky store bar + search header, saffron deal-of-the-hour band, filter rail + card grid, join band, footer with disclosure */
+:root{
+  --ink:#1b1840; --ink-2:#4a4672; --muted:#77739a;
+  --bg:#f7f6fb; --surface:#ffffff; --line:#e3e1ee;
+  --accent:#e8890c; --accent-ink:#5a3300; --accent-soft:#fff1dc;
+  --deep:#2a2470; --deep-soft:#ecebfb;
+  --good:#16794a; --good-soft:#e2f4ea; --hot:#c4361c; --hot-soft:#fde7e2;
+  --share:#0b8463; --share-ink:#ffffff; --share-soft:#eef9f5;
+  --thumb:#e8edee; --mint:#e3f6ef; --mint-2:#cdeee2; --mint-ink:#0d6a50; --rib:#c51d5c; --rib-dark:#7d0f37;
+  --f-display:"Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+  --f-body:"Figtree", "Noto Sans Telugu", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-te:"Noto Sans Telugu", "Figtree", system-ui, sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ink:#eeecff; --ink-2:#c3bfe6; --muted:#9692bd;
+  --bg:#12112a; --surface:#1c1a3a; --line:#2f2c55;
+  --accent:#f5a33a; --accent-ink:#1a1000; --accent-soft:#3a2810;
+  --deep:#a9a2ff; --deep-soft:#26234d;
+  --good:#5fd39a; --good-soft:#163a2a; --hot:#ff8a70; --hot-soft:#45201a;
+  --share:#3fcf9f; --share-ink:#04261b; --share-soft:#16332b;
+  --thumb:#2a2850; --mint:#143a33; --mint-2:#1b4a40; --mint-ink:#86e6c4; --rib:#e0306f; --rib-dark:#8a1240; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ink:#eeecff; --ink-2:#c3bfe6; --muted:#9692bd;
+  --bg:#12112a; --surface:#1c1a3a; --line:#2f2c55;
+  --accent:#f5a33a; --accent-ink:#1a1000; --accent-soft:#3a2810;
+  --deep:#a9a2ff; --deep-soft:#26234d;
+  --good:#5fd39a; --good-soft:#163a2a; --hot:#ff8a70; --hot-soft:#45201a;
+  --share:#3fcf9f; --share-ink:#04261b; --share-soft:#16332b;
+  --thumb:#2a2850; --mint:#143a33; --mint-2:#1b4a40; --mint-ink:#86e6c4; --rib:#e0306f; --rib-dark:#8a1240; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.te{font-family:var(--f-te)}
+
+/* header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.hrow{display:flex;align-items:center;gap:14px;padding-block:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:baseline;gap:6px;text-decoration:none}
+.logo b{font-family:var(--f-display);font-weight:800;font-size:26px;letter-spacing:-.03em;color:var(--deep)}
+.logo b i{font-style:normal;color:var(--accent)}
+.logo span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.search{flex:1 1 280px;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-width:0}
+.search input{border:0;background:transparent;outline:0;width:100%;min-width:0}
+.hbtns{display:flex;gap:8px;margin-left:auto}
+.pill{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap}
+.pill[aria-pressed="true"]{background:var(--deep);color:var(--surface);border-color:var(--deep)}
+.wcount{display:inline-grid;place-items:center;min-width:18px;height:18px;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-size:11px;margin-left:4px;padding:0 5px}
+nav.cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
+nav.cats::-webkit-scrollbar{display:none}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;white-space:nowrap;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);font-weight:700}
+
+.demo{background:var(--deep-soft);color:var(--ink-2);font-size:13px;padding-block:8px;text-align:center}
+.demo strong{color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;padding-block:28px 18px;align-items:stretch}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,4.6vw,52px);line-height:1.02;letter-spacing:-.035em;margin:6px 0 12px;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:700}
+.hero p{color:var(--ink-2);max-width:56ch;margin:0 0 16px}
+.hero>div{min-width:0}
+.stores{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.stag{white-space:nowrap;background:#fff;height:38px;padding:4px 10px;display:inline-flex;align-items:center;border-radius:9px}
+.stag img{height:24px;width:auto;max-width:96px;object-fit:contain;display:block}
+.stag.more{background:var(--surface);color:var(--ink);font-weight:700}
+/* all-stores directory */
+.dir{padding-block:10px 30px}
+.dirtools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.dirtools .search{flex:1 1 220px;background:var(--surface)}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.az{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:14px}
+.az button{border:0;background:transparent;width:28px;height:28px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;color:var(--ink-2)}
+.az button[aria-pressed="true"]{background:var(--deep);color:var(--surface)}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.stile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;align-items:stretch;min-width:0}
+.slogo{background:#fff;border-radius:10px;height:68px;display:grid;place-items:center;padding:8px}
+.slogo img{max-height:52px;max-width:100%;object-fit:contain}
+.sname{font-size:13px;color:var(--ink-2);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srow{display:grid;grid-template-columns:1fr auto;gap:6px}
+.srow .buy{padding:8px;font-size:13px}
+.sic{width:38px;border-radius:9px;border:1px solid var(--share);background:var(--surface);color:var(--share);display:grid;place-items:center;cursor:pointer}
+.gtag{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:center}
+.moreb{margin:16px auto 0;display:block}
+.stag{font-size:12px;font-weight:700;padding:4px 9px;border-radius:6px;border:1px solid var(--line);cursor:pointer;background:var(--surface)}
+.stag[aria-pressed="true"]{border-color:var(--deep);box-shadow:inset 0 0 0 1px var(--deep)}
+.dotd{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:1px}
+.spot{background:var(--deep);color:#fff;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+.spot::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:var(--accent);opacity:.9}
+.spot>*{position:relative;z-index:1}
+.spot .eyebrow{color:#d8d4ff}
+.spot h2{font-family:var(--f-display);font-size:22px;line-height:1.15;margin:0;max-width:22ch}
+.spot .pr{display:flex;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums}
+.spot .pr b{font-size:30px;font-family:var(--f-display)}
+.spot .pr s{opacity:.7}
+.spot .cta{align-self:flex-start;background:var(--accent);color:#1a1000;border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;text-decoration:none}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;background:rgba(255,255,255,.12);padding:4px 8px;border-radius:6px;font-size:13px;align-self:flex-start}
+
+.quick{display:flex;gap:8px;flex-wrap:wrap;padding-block:4px 18px}
+.qk{border:1px dashed var(--line);border-radius:10px;padding:8px 12px;background:var(--surface);cursor:pointer;font-weight:600;font-size:13px}
+.qk[aria-pressed="true"]{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+
+/* body layout */
+.main{display:grid;grid-template-columns:230px 1fr;gap:24px;padding-block:8px 32px}
+aside.rail{position:sticky;top:150px;align-self:start;display:flex;flex-direction:column;gap:18px}
+.rail h3{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 8px}
+.opt{display:flex;align-items:center;gap:8px;padding:4px 0;cursor:pointer;font-size:14px}
+.opt input{accent-color:var(--deep)}
+.rail select{width:100%;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--surface)}
+.rangerow{display:flex;gap:6px}
+.rangerow input{width:100%;min-width:0;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+
+.bar{display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap}
+.bar h2{font-family:var(--f-display);font-size:22px;margin:0;letter-spacing:-.02em}
+.count{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden;min-width:0;padding:8px;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 10px 26px -16px rgba(30,20,90,.4)}
+.thumb{aspect-ratio:1/.82;max-width:100%;position:relative;display:grid;place-items:center;background:var(--thumb);border-radius:10px;overflow:hidden}
+.thumb img{max-width:72%;max-height:100%;object-fit:contain}
+.ph{font-family:var(--f-display);font-weight:800;font-size:44px;letter-spacing:-.04em;opacity:.85}
+.ribbon{position:absolute;top:0;left:0;padding:5px 12px 5px 10px;font-size:11px;font-weight:800;letter-spacing:.02em;border-bottom-right-radius:12px}
+.b-loot{background:var(--hot);color:#fff}
+.b-today{background:var(--accent);color:#1a1000}
+.b-drop{background:var(--good);color:#fff}
+.bdg{font-size:11px;font-weight:700;padding:3px 7px;border-radius:5px}
+.b-sample{position:absolute;bottom:8px;left:8px;background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.heart{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:0;background:var(--surface);cursor:pointer;display:grid;place-items:center;color:var(--muted);box-shadow:0 1px 3px rgba(20,10,60,.15)}
+.heart[aria-pressed="true"]{color:var(--hot)}
+.off{position:absolute;bottom:8px;right:8px;background:var(--surface);color:var(--good);font-weight:800;font-size:12px;padding:3px 8px;border-radius:6px}
+.cb{padding:10px 4px 2px;display:flex;flex-direction:column;gap:8px;flex:1}
+.smark{display:flex;align-items:center;min-height:22px}
+.smark img{height:22px;width:auto;max-width:130px;object-fit:contain;background:#fff;border-radius:4px;padding:1px 3px}
+.stxt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;font-weight:800;font-size:13px;letter-spacing:-.01em;display:inline-flex;align-items:center;gap:6px}
+.stxt i{width:18px;height:18px;border-radius:5px;display:grid;place-items:center;color:#fff;font-style:normal;font-size:11px;font-weight:800}
+.card h4{margin:0;font-size:14px;line-height:1.35;font-weight:500}
+.tlink{all:unset;cursor:pointer;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tlink:hover{text-decoration:underline}
+.tlink:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.good{font-size:12.5px;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.good b{color:var(--ink)}
+.pinfo{display:grid;grid-template-columns:1fr auto 1.2fr;gap:10px;align-items:start;border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+.pinfo .sep{width:1px;align-self:stretch;background:var(--line)}
+.lbl{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.pillg{display:inline-block;font-size:11px;color:var(--muted);background:var(--bg);border-radius:4px;padding:2px 8px;margin-bottom:4px;white-space:nowrap}
+.pinfo b{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.pinfo strong{display:block;font-size:14px}
+.price{display:flex;align-items:baseline;gap:8px;font-variant-numeric:tabular-nums}
+.price b{font-size:20px;font-family:var(--f-display)}
+.price s{color:var(--muted);font-size:13px}
+.checkp{font-size:13px;font-weight:700;color:var(--deep)}
+.checked{font-size:11px;color:var(--muted)}
+.acts{display:flex;gap:6px}
+.buy{display:block;flex:none;text-align:center;text-decoration:none;background:var(--deep);color:var(--surface);border-radius:9px;padding:10px;font-weight:700;font-size:14px;border:0;cursor:pointer}
+.acts .buy,.row .buy{flex:1}
+.ghost{background:transparent;border:1px solid var(--line);border-radius:9px;padding:9px 11px;cursor:pointer;font-weight:600;font-size:13px}
+
+/* store offer cards: mint banner, festive light string, ribbon, arch visual */
+.offers{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;padding-bottom:26px}
+.ocard{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:10px;min-width:0;box-shadow:0 6px 18px -14px rgba(20,60,50,.5)}
+.oribbon{position:absolute;top:8px;right:-6px;z-index:3;background:var(--rib);color:#fff;font-size:11px;font-weight:800;padding:5px 14px;border-radius:4px 0 0 4px}
+.oribbon::after{content:"";position:absolute;right:0;bottom:-6px;border-left:6px solid var(--rib-dark);border-bottom:6px solid transparent}
+.obanner{position:relative;border-radius:12px;background:var(--mint);aspect-ratio:16/10;max-width:100%;overflow:hidden}
+.obanner::before{content:"";position:absolute;inset:0;background-image:linear-gradient(45deg,var(--mint-2) 25%,transparent 25%,transparent 75%,var(--mint-2) 75%),linear-gradient(45deg,var(--mint-2) 25%,transparent 25%,transparent 75%,var(--mint-2) 75%);background-size:22px 22px;background-position:0 0,11px 11px;-webkit-mask-image:linear-gradient(to top,#000,transparent 55%);mask-image:linear-gradient(to top,#000,transparent 55%);opacity:.9}
+.lights{position:absolute;top:0;left:0;width:100%;height:30px;z-index:1}
+.lights circle{animation:tw 2.4s ease-in-out infinite}
+.lights circle:nth-of-type(3n){animation-delay:.8s}.lights circle:nth-of-type(3n+1){animation-delay:1.6s}
+@keyframes tw{0%,100%{opacity:1}50%{opacity:.35}}
+.ologo{position:absolute;top:30px;left:16px;z-index:2;background:#fff;border-radius:8px;padding:5px 9px;box-shadow:0 1px 3px rgba(20,60,50,.18);max-width:48%}
+.ologo .stxt{color:#1b1840}
+.ologo img{height:26px;width:auto;max-width:120px;object-fit:contain;display:block}
+.otext{position:absolute;left:16px;top:44%;z-index:2;max-width:54%}
+.otext h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(19px,2vw,23px);line-height:1.08;letter-spacing:-.02em;color:var(--mint-ink)}
+.otext p{margin:4px 0 0;font-size:13px;color:var(--ink-2);line-height:1.3}
+.arch{position:absolute;right:14px;bottom:22px;width:30%;aspect-ratio:3/4;z-index:2;border-radius:999px 999px 8px 8px;border:4px solid var(--mint-ink);overflow:hidden;display:grid;place-items:center;color:#fff;font-family:var(--f-display);font-weight:800;font-size:30px}
+.arch img{width:100%;height:100%;object-fit:cover}
+.pedestal{position:absolute;right:calc(16px - 6%);bottom:12px;width:46%;height:16px;z-index:1;border-radius:50%;background:var(--mint-ink);opacity:.55}
+.tc{position:absolute;right:10px;bottom:4px;z-index:2;font-size:8px;color:var(--ink-2);letter-spacing:.04em}
+.oinfo{display:grid;grid-template-columns:1fr auto 1.2fr;gap:10px;padding:2px 6px 10px;border-bottom:1px solid var(--line)}
+.oinfo .sep{width:1px;background:var(--line)}
+.oinfo span.v{font-size:14px}
+.oinfo strong{display:block;font-size:14px}
+@media (prefers-reduced-motion:reduce){.lights circle{animation:none}}
+.empty{grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r)}
+
+/* share controls */
+.shrow{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.swa,.son{display:flex;align-items:center;justify-content:center;gap:6px;border-radius:9px;padding:8px 6px;font-weight:700;font-size:13px;text-decoration:none;cursor:pointer;white-space:nowrap;min-width:0}
+.swa{background:var(--share);color:var(--share-ink);border:1px solid var(--share)}
+.son{background:var(--surface);color:var(--share);border:1px solid var(--share)}
+.cpy{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--share-soft);border:1px solid var(--line);border-radius:9px;padding:8px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;color:var(--ink)}
+.shopts{display:grid;gap:8px}
+.shopt{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:12px;text-decoration:none;font-weight:700;background:var(--surface);cursor:pointer;width:100%;text-align:left;color:var(--ink)}
+.shopt i{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-style:normal;flex:none}
+.shopt small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.shurl{font-size:12px;color:var(--muted);word-break:break-all;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px;user-select:all}
+
+/* join band */
+.join{background:var(--accent-soft);border-block:1px solid var(--line)}
+.join .wrap{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding-block:22px}
+.join h3{font-family:var(--f-display);font-size:24px;margin:0 0 4px;letter-spacing:-.02em}
+.join p{margin:0;color:var(--ink-2)}
+.joinb{display:flex;gap:8px;flex-wrap:wrap}
+.jbtn{text-decoration:none;font-weight:700;padding:11px 16px;border-radius:10px;border:0;cursor:pointer}
+.tg{background:#229ED9;color:#fff}.wa{background:#1fa855;color:#fff}
+
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-block:28px}
+.how div{border-top:3px solid var(--deep);padding-top:10px}
+.how .n{font-family:var(--f-display);font-weight:800;color:var(--accent);font-size:14px}
+.how h4{margin:4px 0;font-size:16px}
+.how p{margin:0;color:var(--ink-2);font-size:14px}
+
+.faq{padding-block:8px 28px;max-width:820px}
+.faq h2{font-family:var(--f-display);font-size:24px;letter-spacing:-.02em}
+details{border-bottom:1px solid var(--line);padding-block:12px}
+summary{cursor:pointer;font-weight:700}
+details p{color:var(--ink-2);margin:8px 0 0}
+
+footer{background:var(--surface);border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+footer .wrap{padding-block:24px;display:grid;gap:14px}
+.disc{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;color:var(--ink)}
+.flinks{display:flex;flex-wrap:wrap;gap:6px 16px}
+.flinks a{text-decoration:none;color:var(--ink-2)}
+
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(10,8,30,.55);z-index:40;display:grid;place-items:center;padding:16px}
+.sheet{background:var(--surface);border-radius:18px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:20px;display:grid;gap:12px}
+.sheet h3{font-family:var(--f-display);font-size:22px;margin:0;line-height:1.2}
+.sheet ul{margin:0;padding-left:18px;color:var(--ink-2)}
+.sheet .row{display:flex;gap:8px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:50;font-weight:600}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .main{grid-template-columns:1fr}
+  aside.rail{position:static;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .how{grid-template-columns:1fr}
+  .join .wrap{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .grid{grid-template-columns:1fr 1fr;gap:10px}
+  .cb{padding:10px}
+  .acts .ghost{display:none}
+  .swa,.son{font-size:12px;padding:8px 4px;gap:4px}
+  .pinfo{grid-template-columns:1fr;gap:4px}.pinfo .sep{display:none}
+  .card{padding:6px}.ph{font-size:34px}
+  .swa svg,.son svg{width:14px;height:14px}
+  .logo span{display:none}
+  .hbtns{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="hrow">
+      <a class="logo" href="#top" aria-label="Adyzio home"><b>adyz<i>io</i></b><span data-i="tag">Deals</span></a>
+      <label class="search" for="q">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search earbuds, bags, kurtis…" autocomplete="off">
+      </label>
+      <div class="hbtns">
+        <button class="pill" id="lang" aria-pressed="false">తెలుగు</button>
+        <button class="pill" id="wishBtn" aria-pressed="false"><span data-i="saved">Saved</span><span class="wcount" id="wc">0</span></button>
+        <button class="pill" id="theme" aria-label="Switch theme">◐</button>
+      </div>
+    </div>
+    <nav class="cats" id="cats" aria-label="Categories"></nav>
+  </div>
+</header>
+<div class="demo"><div class="wrap"><strong data-i="demoA">Design preview.</strong> <span data-i="demoB">Products, prices and links below are samples. Replace them with your SiteStripe and ExtraPe links before going live.</span></div></div>
+
+<main id="top">
+  <section class="wrap hero">
+    <div>
+      <div class="eyebrow" data-i="eye">Amazon · Flipkart · Myntra · AJIO · Nykaa · Tata CLiQ · and more</div>
+      <h1 data-i="h1">Every good deal in India, <em>checked</em> before it reaches you.</h1>
+      <p data-i="lede">Loot deals, price drops and budget picks from Amazon and every ExtraPe store in one place. Each card says who the product suits and when we last checked the price. You always buy on the store's own site.</p>
+      <div class="stores" id="stores"></div>
+    </div>
+    <div class="spot" id="spot"></div>
+  </section>
+
+  <div class="wrap quick" id="quick"></div>
+
+  <section class="wrap" aria-labelledby="offT">
+    <div class="bar"><h2 id="offT" data-i="offT">Store offers</h2><span class="count" data-i="offS">Sale pages and coupon deals, store by store</span></div>
+    <div class="offers" id="offers"></div>
+  </section>
+
+  <section class="wrap main">
+    <aside class="rail" aria-label="Filters">
+      <div>
+        <h3 data-i="fType">Deal type</h3>
+        <label class="opt"><input type="checkbox" value="loot" class="ft" id="ft-loot"> <span data-i="loot">Loot deal</span></label>
+        <label class="opt"><input type="checkbox" value="today" class="ft" id="ft-today"> <span data-i="today">Today's deal</span></label>
+        <label class="opt"><input type="checkbox" value="drop" class="ft" id="ft-drop"> <span data-i="drop">Price drop</span></label>
+      </div>
+      <div>
+        <h3 data-i="fPrice">Price (₹)</h3>
+        <div class="rangerow">
+          <input id="pmin" type="number" inputmode="numeric" placeholder="Min" min="0">
+          <input id="pmax" type="number" inputmode="numeric" placeholder="Max" min="0">
+        </div>
+      </div>
+      <div>
+        <h3 data-i="fOff">Minimum discount</h3>
+        <select id="minoff">
+          <option value="0">Any</option><option value="30">30% or more</option><option value="50">50% or more</option><option value="70">70% or more</option>
+        </select>
+      </div>
+      <div>
+        <h3 data-i="fSort">Sort</h3>
+        <select id="sort">
+          <option value="hot">Hottest first</option>
+          <option value="new">Newest</option>
+          <option value="off">Biggest discount</option>
+          <option value="low">Price: low to high</option>
+          <option value="high">Price: high to low</option>
+        </select>
+      </div>
+      <button class="ghost" id="reset" data-i="reset">Clear filters</button>
+    </aside>
+
+    <div>
+      <div class="bar"><h2 id="gtitle" data-i="all">All deals</h2><span class="count" id="count"></span></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section class="wrap dir" id="allstores" aria-labelledby="dirT">
+    <div class="bar"><h2 id="dirT" data-i="dirT">All stores</h2><span class="count" id="dirCount"></span></div>
+    <div class="dirtools">
+      <label class="search" for="sq"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="sq" type="search" placeholder="Search stores" autocomplete="off"></label>
+      <div class="tabs" id="gtabs"></div>
+    </div>
+    <div class="az" id="az"></div>
+    <div class="sgrid" id="sgrid"></div>
+    <button class="ghost moreb" id="moreStores" hidden></button>
+  </section>
+
+  <section class="join">
+    <div class="wrap">
+      <div>
+        <h3 data-i="jH">Get loot deals before they sell out</h3>
+        <p data-i="jP">Free alerts on Telegram and WhatsApp. Five to fifteen picks a day, no spam.</p>
+      </div>
+      <div class="joinb">
+        <a class="jbtn tg" href="https://t.me/" target="_blank" rel="noopener" id="tgLink" data-i="jT">Join Telegram</a>
+        <a class="jbtn wa" href="https://whatsapp.com/channel/" target="_blank" rel="noopener" id="waLink" data-i="jW">Join WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap how">
+    <div><span class="n">1</span><h4 data-i="s1">Pick a deal</h4><p data-i="s1p">Filter by store, category, budget or deal type. Save the ones you like with the heart.</p></div>
+    <div><span class="n">2</span><h4 data-i="s2">Read who it suits</h4><p data-i="s2p">The "Good for" line tells you if it fits your need. Tap Details for what to check before buying.</p></div>
+    <div><span class="n">3</span><h4 data-i="s3">Buy on the store</h4><p data-i="s3p">The button opens Amazon, Flipkart or the store's own page. Confirm today's price there and check out.</p></div>
+  </section>
+
+  <section class="wrap faq">
+    <h2 data-i="fq">Questions</h2>
+    <details><summary data-i="q1">What is Adyzio?</summary><p data-i="a1">Adyzio is the deals site of ABD Innovations, Andhra Pradesh. We pick useful products from Indian stores, write a short note on each and link you to the store to buy.</p></details>
+    <details><summary data-i="q2">Do you earn from these links?</summary><p data-i="a2">Yes. Adyzio is an Amazon Associate and also earns through ExtraPe for Flipkart, Myntra, Ajio, Meesho, Shopsy and other stores. You pay the same price; the store pays us a small commission.</p></details>
+    <details><summary data-i="q3">Are the prices live?</summary><p data-i="a3">No. Each card shows the price we saw and when. Store prices change often, so always confirm on the store page before paying.</p></details>
+    <details><summary data-i="q4">Do you show ratings or reviews?</summary><p data-i="a4">No. Ratings stay on the store's page where they are current. We only write who the product is for.</p></details>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="disc">
+      <strong>Disclosure:</strong> As an Amazon Associate I earn from qualifying purchases. Adyzio also earns commission through ExtraPe on purchases from Flipkart, Myntra, Ajio, Meesho, Shopsy and other stores, at no extra cost to you.
+      <div class="te" style="margin-top:6px">ఈ site లో affiliate links ఉన్నాయి. మీరు కొంటే మాకు చిన్న commission వస్తుంది, మీకు extra cost ఉండదు.</div>
+    </div>
+    <div class="flinks"><a href="#top">Deals</a><a href="#top">Loot deals</a><a href="#top">Under ₹499</a><a href="#top">Under ₹999</a><a href="#top">Buying guides</a><a href="#top">How we pick</a><a href="#top">About &amp; disclosure</a><a href="#top">Contact</a></div>
+    <div>© 2026 Adyzio · ABD Innovations, Andhra Pradesh</div>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mT" id="sheet"></div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ============ EDIT HERE ============
+   Replace each sample with a real product.
+   link   : your SiteStripe (Amazon) or ExtraPe link. Never leave a link without your tag.
+   price/mrp : what you saw on the store page; leave null to show "Check latest price".
+   checked: date-time you saw that price (ISO).
+   type   : "loot" | "today" | "drop" | ""   ends: ISO time the deal ends, or null.
+*/
+const CONFIG={ telegram:"https://t.me/", whatsapp:"https://whatsapp.com/channel/", site:"https://www.adyzio.com" };
+
+/* STORES: every store Adyzio shows. To add any store ExtraPe offers, copy one line and change key, name (n) and colour (c).
+   net: "amazon" = Amazon Associates (SiteStripe link) · "extrape" = ExtraPe converted link
+   logo: path to that store's logo file, e.g. "/assets/stores/flipkart.png". Use only logo files the store or ExtraPe lets you use.
+         Leave it out and the store name shows as a text tag instead. */
+const STORES={};
+(window.ADYZIO_STORES||[]).forEach(x=>{STORES[x.k]={n:x.n,c:x.c,net:x.net,g:x.g,logo:x.logo,link:x.link||""}});
+/* Paste each store's ExtraPe (or Amazon) link here: key: "link" */
+const STORE_LINKS={ /* flipkart:"https://…", amazon:"https://amzn.to/…" */ };
+Object.entries(STORE_LINKS).forEach(([k,v])=>{if(STORES[k])STORES[k].link=v});
+const TOP_STORES=["amazon","flipkart","myntra","ajio","meesho","shopsy","nykaa","tatacliq","croma","boat","jiomart","decathlon","pantaloons","pepperfry","noise","levi-s"];
+const GROUPS=[["all","All stores","అన్ని stores"],["shopping","Shopping","షాపింగ్"],["travel","Travel","ప్రయాణం"],["finance","Cards & Finance","కార్డులు & ఫైనాన్స్"],["services","Apps & Services","యాప్స్ & సేవలు"]];
+const CATS=[["all","All","అన్నీ"],["electronics","Electronics","ఎలక్ట్రానిక్స్"],["mobiles","Mobiles","మొబైల్స్"],["fashion","Fashion","ఫ్యాషన్"],["home","Home & Kitchen","ఇల్లు & వంటగది"],["beauty","Beauty","బ్యూటీ"],["study","Students","విద్యార్థులు"],["festive","Festive & Decor","పండుగ"],["fitness","Sports & Fitness","ఫిట్‌నెస్"],["kids","Kids & Toys","పిల్లలు"]];
+
+const now=Date.now(), h=3600e3;
+const P=[
+ {id:1,t:"True wireless earbuds with long battery life",cat:"electronics",s:"amazon",price:999,mrp:3999,type:"loot",hot:98,ends:new Date(now+5*h).toISOString(),good:"Daily commute and calls on a small budget.",check:["Battery hours on the listing","Warranty period","Return window"]},
+ {id:2,t:"5G smartphone, 8GB RAM variant",cat:"mobiles",s:"flipkart",price:14999,mrp:19999,type:"today",hot:92,good:"First 5G phone for students and parents.",check:["Bank offer terms","Which RAM/storage you're buying","Exchange value"]},
+ {id:3,t:"Women's printed cotton kurti set",cat:"fashion",s:"myntra",price:649,mrp:2199,type:"drop",hot:85,good:"Office and college wear in summer.",check:["Size chart","Fabric","Return policy"]},
+ {id:4,t:"Rice string lights, 15 metre",cat:"festive",s:"amazon",price:199,mrp:899,type:"loot",hot:90,ends:new Date(now+28*h).toISOString(),good:"Diwali and Karthika Deepam balcony decor.",check:["Indoor or outdoor use","Plug type","Length"]},
+ {id:5,t:"Scientific calculator for exams",cat:"study",s:"amazon",price:null,mrp:null,type:"",hot:70,good:"Intermediate, EAMCET and engineering students.",check:["Allowed model in your exam","Battery or solar","Function count"]},
+ {id:6,t:"LED study table lamp, 3 brightness modes",cat:"study",s:"flipkart",price:449,mrp:1299,type:"drop",hot:76,good:"Late-night study without straining your eyes.",check:["USB or plug power","Brightness levels","Warranty"]},
+ {id:7,t:"Men's casual sneakers",cat:"fashion",s:"ajio",price:899,mrp:2999,type:"today",hot:74,good:"Everyday wear for college and outings.",check:["Size chart","Sole material","Return window"]},
+ {id:8,t:"Non-stick tawa, induction base",cat:"home",s:"amazon",price:549,mrp:1450,type:"drop",hot:72,good:"Dosa and chapati on gas or induction.",check:["Induction compatible","Diameter","Coating type"]},
+ {id:9,t:"Pressure cooker, 5 litre",cat:"home",s:"flipkart",price:1299,mrp:2550,type:"",hot:66,good:"Family of four, daily rice and dal.",check:["Inner or outer lid","Induction base","ISI mark"]},
+ {id:10,t:"Smartwatch with calling",cat:"electronics",s:"flipkart",price:1199,mrp:4999,type:"loot",hot:95,ends:new Date(now+9*h).toISOString(),good:"Step tracking and calls without taking your phone out.",check:["App support for your phone","Strap size","Warranty"]},
+ {id:11,t:"Oxidised jhumka earrings, set of 6",cat:"fashion",s:"meesho",price:129,mrp:299,type:"",hot:63,good:"Gift for sisters, festivals and functions.",check:["Pair count","Material","Delivery time"]},
+ {id:12,t:"Laptop backpack, 30 litre",cat:"study",s:"amazon",price:599,mrp:2499,type:"drop",hot:80,good:"College and office commute with a 15.6 inch laptop.",check:["Laptop size it fits","Water resistance","Warranty"]},
+ {id:13,t:"Face wash combo pack",cat:"beauty",s:"myntra",price:349,mrp:599,type:"",hot:55,good:"Oily skin in hot, humid weather.",check:["Skin type on pack","Expiry date","Pack size"]},
+ {id:14,t:"Yoga mat, 6mm anti-slip",cat:"fitness",s:"amazon",price:399,mrp:1499,type:"today",hot:69,good:"Home workouts and morning yoga.",check:["Thickness","Length","Material"]},
+ {id:15,t:"Kids LCD writing slate",cat:"kids",s:"meesho",price:139,mrp:399,type:"",hot:61,good:"Practice letters without paper waste.",check:["Screen size","Battery replaceable","Age range"]},
+ {id:16,t:"Bluetooth party speaker with mic",cat:"electronics",s:"shopsy",price:799,mrp:2999,type:"loot",hot:88,ends:new Date(now+2.5*h).toISOString(),good:"House functions and small family parties.",check:["Wattage","Mic included","Battery hours"]},
+ {id:17,t:"Cotton bedsheet, double with 2 covers",cat:"home",s:"shopsy",price:399,mrp:1499,type:"drop",hot:67,good:"Guest room or gifting.",check:["Bed size","Thread count","Colour fastness"]},
+ {id:18,t:"Interview formal shirt, slim fit",cat:"fashion",s:"ajio",price:599,mrp:1799,type:"",hot:58,good:"Job interviews and first office days.",check:["Fit type","Size chart","Fabric"]},
+ {id:19,t:"Competitive exam general studies book",cat:"study",s:"amazon",price:null,mrp:null,type:"",hot:64,good:"APPSC, TSPSC and SSC preparation.",check:["Latest edition year","Language (Telugu/English)","Seller"]},
+ {id:20,t:"Diya set, decorative, pack of 12",cat:"festive",s:"meesho",price:179,mrp:399,type:"today",hot:73,good:"Deepavali and pooja room.",check:["Material","Pack count","Delivery before the festival"]},
+ {id:21,t:"Lipstick and kajal combo",cat:"beauty",s:"nykaa",price:399,mrp:799,type:"drop",hot:71,good:"Festive gifting for sisters and friends.",check:["Shade name","Expiry date","Combo contents"]},
+ {id:22,t:"Men's festive kurta",cat:"fashion",s:"tatacliq",price:799,mrp:2499,type:"today",hot:68,good:"Diwali, weddings and pooja days.",check:["Size chart","Fabric","Return window"]},
+ {id:23,t:"Electric kettle, 1.5 litre",cat:"home",s:"croma",price:899,mrp:1795,type:"",hot:60,good:"Tea, coffee and instant noodles in hostel or office.",check:["Auto cut-off","Wattage","Warranty"]},
+ {id:24,t:"Neckband earphones",cat:"electronics",s:"boat",price:null,mrp:null,type:"",hot:62,good:"Gym and long phone calls.",check:["Battery hours","Water resistance rating","Warranty"]},
+ {id:25,t:"Demi-fine pendant necklace",cat:"fashion",s:"palmonas",price:null,mrp:null,type:"",hot:57,good:"Everyday jewellery and gifting.",check:["Plating type","Chain length","Care instructions"]},
+ {id:26,t:"Cow ghee, 500 ml",cat:"home",s:"doodhvale",price:null,mrp:null,type:"today",hot:59,good:"Families who prefer farm ghee for sweets.",check:["Pack size","Best-before date","Delivery to your pin code"]},
+];
+/* STORE OFFERS: sale pages and coupons, one card per offer.
+   head/sub: copy the offer exactly as the store shows it. code: coupon code or leave "". img: banner/product image you are allowed to use. */
+const OFFERS=[
+ {id:1001,s:"flipkart",rib:"Best Offer",head:"Up to 80% Off",sub:"Big festive sale",offer:"Shop Now",ends:new Date(now+30*h).toISOString()},
+ {id:1002,s:"ajio",rib:"Add To Cart Now",head:"Up to 70% Off",sub:"Festive edit",offer:"Limited Time Offer"},
+ {id:1003,s:"myntra",rib:"Get Today",head:"50–80% Off",sub:"New deals unlocked",offer:"Grab Now"},
+ {id:1004,s:"ghar",rib:"Exclusive Deal",head:"Up to 60% Off",sub:"+ extra off with code",offer:"Code",code:"SAMPLE20"},
+ {id:1005,s:"doodhvale",rib:"Bestsellers",head:"Buy 1 Get 2",sub:"Farm-fresh ghee collection",offer:"Buy-1-Get-2"},
+ {id:1006,s:"palmonas",rib:"Exclusive Deal",head:"Flat 50% Off",sub:"Festive jewellery sale",offer:"Limited Time Offer"},
+ {id:1007,s:"tatacliq",rib:"Bestsellers",head:"50–85% Off",sub:"Season sale",offer:"Grab Now"},
+ {id:1008,s:"organictattva",rib:"Season Special",head:"Up to 30% Off",sub:"With freebies",offer:"Grab Now"},
+];
+OFFERS.forEach(o=>{o.t=STORES[o.s].n+": "+o.head;o.good=o.sub;o.price=null;o.isOffer=true;o.sample=o.sample!==false;o.link=o.link||"#add-your-affiliate-link";o.slug=o.slug||o.s});
+/* ============ END EDIT ============ */
+
+const TXT={
+ en:{},
+ te:{tag:"డీల్స్",saved:"సేవ్",demoA:"డిజైన్ ప్రివ్యూ.",demoB:"క్రింది products, prices, links అన్నీ samples. Live చేసే ముందు మీ SiteStripe, ExtraPe links పెట్టండి.",
+  eye:"Amazon · Flipkart · Myntra · AJIO · Nykaa · Tata CLiQ · ఇంకా మరెన్నో",h1:"ఇండియాలోని మంచి డీల్స్ అన్నీ, <em>చెక్ చేసి</em> మీకు అందిస్తాం.",
+  lede:"లూట్ డీల్స్, ధర తగ్గిన products, బడ్జెట్ picks Amazon మరియు ExtraPe stores అన్నింటి నుండి ఒకే చోట. ప్రతి card లో ఎవరికి సరిపోతుందో, ధర ఎప్పుడు చెక్ చేశామో ఉంటుంది. కొనడం ఎప్పుడూ store site లోనే.",
+  fType:"డీల్ రకం",loot:"లూట్ డీల్",today:"ఈరోజు డీల్",drop:"ధర తగ్గింది",fPrice:"ధర (₹)",fOff:"కనీస డిస్కౌంట్",fSort:"క్రమం",reset:"Filters తీసేయండి",dirT:"అన్ని stores",offT:"స్టోర్ ఆఫర్లు",offS:"ప్రతి store sale, coupon డీల్స్",all:"అన్ని డీల్స్",
+  jH:"లూట్ డీల్స్ అయిపోకముందే పొందండి",jP:"Telegram, WhatsApp లో free alerts. రోజుకు 5–15 picks, spam లేదు.",jT:"Telegram లో చేరండి",jW:"WhatsApp లో చేరండి",
+  s1:"డీల్ ఎంచుకోండి",s1p:"Store, category, budget లేదా డీల్ రకంతో filter చేయండి. నచ్చినవి heart తో save చేయండి.",
+  s2:"ఎవరికి సరిపోతుందో చదవండి",s2p:"\"సరిపోయేది\" line మీ అవసరానికి తగినదో చెబుతుంది. కొనే ముందు చెక్ చేయాల్సినవి Details లో ఉంటాయి.",
+  s3:"Store లో కొనండి",s3p:"Button Amazon, Flipkart లేదా store page ఓపెన్ చేస్తుంది. అక్కడ ఈరోజు ధర చూసి కొనండి.",
+  fq:"ప్రశ్నలు",q1:"Adyzio అంటే ఏమిటి?",a1:"Adyzio, ఆంధ్రప్రదేశ్ కి చెందిన ABD Innovations డీల్స్ site. ఉపయోగపడే products ఎంచుకుని, చిన్న note రాసి, కొనడానికి store link ఇస్తాం.",
+  q2:"ఈ links నుండి మీకు ఆదాయం వస్తుందా?",a2:"అవును. Adyzio Amazon Associate, మరియు Flipkart, Myntra, Ajio, Meesho, Shopsy కోసం ExtraPe ద్వారా commission వస్తుంది. మీకు ధర మారదు.",
+  q3:"ధరలు live గా ఉంటాయా?",a3:"లేదు. ప్రతి card లో మేము చూసిన ధర, సమయం ఉంటాయి. కొనే ముందు store page లో confirm చేయండి.",
+  q4:"Ratings, reviews చూపిస్తారా?",a4:"లేదు. Ratings store page లోనే ఉంటాయి. మేము ఎవరికి సరిపోతుందో మాత్రమే రాస్తాం."}
+};
+const L={en:{good:"Good for",check:"Check latest price",checked:"Checked",buy:"Buy Now",details:"Details",results:"deals",none:"No deals match these filters.",saved:"Saved deals",copy:"Copy share link",copied:"Link copied",sample:"Sample",ends:"Ends in",before:"Check before you buy",loot:"Loot",today:"Today",drop:"Price drop",dotd:"Deal of the hour",offT:"Store offers",dealOffer:"Deal Offer",tc:"*T&C APPLY",startPrice:"Starting Price",onEvery:"On",liveNow:"Live now",mrp:"MRP",seeDeal:"See deal",code:"Code",lootL:"Loot Deal",todayL:"Get Today",dropL:"Price Drop",under:"Under",all:"All deals",close:"Close",share:"Share",shareOn:"Share On",copyLink:"Copy link",shareVia:"Share this deal",tgSub:"Send to a chat or group",mailSub:"Opens your email app",waSub:"Send to a contact or group"},
+ te:{good:"సరిపోయేది",check:"తాజా ధర చూడండి",checked:"చెక్ చేసింది",buy:"ఇప్పుడే కొనండి",details:"వివరాలు",results:"డీల్స్",none:"ఈ filters కి డీల్స్ లేవు.",saved:"సేవ్ చేసిన డీల్స్",copy:"Share link కాపీ",copied:"Link కాపీ అయింది",sample:"Sample",ends:"ముగింపు",before:"కొనే ముందు చెక్ చేయండి",loot:"లూట్",today:"ఈరోజు",drop:"ధర తగ్గింది",dotd:"ఈ గంట డీల్",offT:"స్టోర్ ఆఫర్లు",dealOffer:"డీల్ ఆఫర్",tc:"*నిబంధనలు వర్తిస్తాయి",startPrice:"ప్రారంభ ధర",onEvery:"",liveNow:"ఇప్పుడు live",mrp:"MRP",seeDeal:"డీల్ చూడండి",code:"Code",lootL:"లూట్ డీల్",todayL:"ఈరోజే",dropL:"ధర తగ్గింది",under:"లోపు",all:"అన్ని డీల్స్",close:"మూసివేయండి",share:"షేర్",shareOn:"షేర్ చేయండి",copyLink:"Link కాపీ",shareVia:"ఈ డీల్ షేర్ చేయండి",tgSub:"Chat లేదా group కి పంపండి",mailSub:"మీ email app ఓపెన్ అవుతుంది",waSub:"Contact లేదా group కి పంపండి"}};
+
+const store=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k));localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}};
+const st={cat:"all",stores:new Set(),types:new Set(),q:"",min:"",max:"",minoff:0,sort:"hot",under:0,wish:new Set(store("adz-wish")||[]),onlyWish:false,lang:store("adz-lang")||"en"};
+const $=s=>document.querySelector(s);
+const inr=n=>"₹"+n.toLocaleString("en-IN");
+const off=p=>p.price&&p.mrp?Math.round((1-p.price/p.mrp)*100):0;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const tl=k=>L[st.lang][k];
+const ago=iso=>{const m=Math.round((Date.now()-new Date(iso))/60000);return m<60?m+" min ago":Math.round(m/60)+" h ago"};
+P.forEach((p,i)=>{p.checked=p.checked||new Date(now-(i*37+12)*60000).toISOString();p.link=p.link||"#add-your-affiliate-link";p.sample=p.sample!==false});
+
+function initials(t){return t.split(/\s+/).filter(w=>/^[A-Za-z]/.test(w)).slice(0,2).map(w=>w[0].toUpperCase()).join("")}
+function thumbBg(p){const c=STORES[p.s].c;return `background:linear-gradient(135deg, color-mix(in srgb, ${c} 22%, var(--surface)), color-mix(in srgb, ${c} 6%, var(--surface)));color:color-mix(in srgb, ${c} 70%, var(--ink))`}
+function countdown(iso){const d=new Date(iso)-Date.now();if(d<=0)return null;const hh=Math.floor(d/h),mm=Math.floor(d%h/60000),ss=Math.floor(d%60000/1000);return `${hh}h ${String(mm).padStart(2,"0")}m ${String(ss).padStart(2,"0")}s`}
+
+function buildChrome(){
+  $("#cats").innerHTML=CATS.map(([k,en,te])=>`<button class="chip" data-c="${k}" aria-pressed="${st.cat===k}">${st.lang==="te"?te:en}</button>`).join("");
+  $("#stores").innerHTML=TOP_STORES.filter(k=>STORES[k]).map(k=>`<button class="stag" data-s="${k}" aria-pressed="${st.stores.has(k)}" aria-label="${esc(STORES[k].n)}" title="${esc(STORES[k].n)}">${STORES[k].logo?`<img src="${STORES[k].logo}" alt="${esc(STORES[k].n)}">`:esc(STORES[k].n)}</button>`).join("")+`<a class="stag more" href="#allstores">${Object.keys(STORES).length} ${st.lang==="te"?"stores అన్నీ":"stores →"}</a>`;
+  if(0)Object.entries(STORES).map(([k,v])=>`<button class="stag" data-s="${k}" aria-pressed="${st.stores.has(k)}"><span class="dotd" style="background:${v.c}"></span>${v.n}</button>`).join("");
+  $("#quick").innerHTML=[199,499,999,1999].map(u=>`<button class="qk" data-u="${u}" aria-pressed="${st.under===u}">${st.lang==="te"?inr(u)+" "+tl("under"):tl("under")+" "+inr(u)}</button>`).join("");
+  document.querySelectorAll("[data-i]").forEach(el=>{const k=el.dataset.i;if(!el.dataset.en)el.dataset.en=el.innerHTML;el.innerHTML=st.lang==="te"&&TXT.te[k]?TXT.te[k]:el.dataset.en;el.classList.toggle("te",st.lang==="te"&&!!TXT.te[k])});
+  $("#lang").textContent=st.lang==="te"?"English":"తెలుగు";
+  $("#lang").setAttribute("aria-pressed",st.lang==="te");
+  document.documentElement.lang=st.lang==="te"?"te":"en-IN";
+}
+
+function spot(){
+  const live=P.filter(p=>p.type==="loot"&&p.ends&&new Date(p.ends)>Date.now()).sort((a,b)=>b.hot-a.hot)[0]||P[0];
+  const cd=live.ends?countdown(live.ends):null;
+  $("#spot").innerHTML=`<div class="eyebrow">${tl("dotd")} · ${STORES[live.s].n}</div>
+   <h2>${esc(live.t)}</h2>
+   <div class="pr">${live.price?`<b>${inr(live.price)}</b><s>${inr(live.mrp)}</s><span>${off(live)}% off</span>`:`<b style="font-size:20px">${tl("check")}</b>`}</div>
+   ${cd?`<span class="timer" data-end="${live.ends}">${tl("ends")} ${cd}</span>`:""}
+   <a class="cta" href="${esc(live.link)}" target="_blank" rel="sponsored nofollow noopener">${tl("buy")}</a>`;
+}
+
+function filtered(){
+  const q=st.q.trim().toLowerCase();
+  let r=P.filter(p=>(st.cat==="all"||p.cat===st.cat)&&(!st.stores.size||st.stores.has(p.s))&&(!st.types.size||st.types.has(p.type))
+    &&(!q||(p.t+" "+p.good+" "+STORES[p.s].n+" "+p.cat).toLowerCase().includes(q))
+    &&(st.min===""||(p.price??0)>=+st.min)&&(st.max===""||(p.price!=null&&p.price<=+st.max))
+    &&(!st.under||(p.price!=null&&p.price<st.under))&&off(p)>=st.minoff&&(!st.onlyWish||st.wish.has(p.id)));
+  const by={hot:(a,b)=>b.hot-a.hot,new:(a,b)=>new Date(b.checked)-new Date(a.checked),off:(a,b)=>off(b)-off(a),low:(a,b)=>(a.price??1e9)-(b.price??1e9),high:(a,b)=>(b.price??-1)-(a.price??-1)};
+  return r.sort(by[st.sort]);
+}
+
+function storeMark(k){
+  const st_=STORES[k];
+  if(st_.logo) return `<img src="${esc(st_.logo)}" alt="${esc(st_.n)}" loading="lazy">`;
+  return `<span class="stxt" style="color:color-mix(in srgb, ${st_.c} 78%, var(--ink))"><i style="background:${st_.c}">${st_.n[0].toUpperCase()}</i>${esc(st_.n)}</span>`;
+}
+function lightString(){
+  const cols=["#ffb703","#ff5d8f","#4cc9f0","#ffd60a","#80ed99"];let c="";
+  for(let x=9,i=0;x<300;x+=17,i++){const y=5+9*Math.sin(Math.PI*((x%75)/75));c+=`<line x1="${x}" y1="${y.toFixed(1)}" x2="${x}" y2="${(y+4).toFixed(1)}" stroke="#4d6b63" stroke-width="1"/><circle cx="${x}" cy="${(y+6.5).toFixed(1)}" r="3" fill="${cols[i%5]}"/>`}
+  return `<svg class="lights" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path d="M0 5 Q37.5 23 75 5 T150 5 T225 5 T300 5" fill="none" stroke="#4d6b63" stroke-width="1.2"/>${c}</svg>`;
+}
+function offerCard(o){
+  const c=STORES[o.s].c, cd=o.ends?countdown(o.ends):null;
+  return `<article class="ocard">
+   <span class="oribbon">${esc(o.rib||"Offer")}</span>
+   <div class="obanner">
+     ${lightString()}
+     <div class="ologo">${storeMark(o.s)}</div>
+     <div class="otext"><h3>${esc(o.head)}</h3><p>${esc(o.sub)}</p></div>
+     <div class="pedestal"></div>
+     <div class="arch" style="background:linear-gradient(160deg, ${c}, color-mix(in srgb, ${c} 55%, #1b1840))">${o.img?`<img src="${esc(o.img)}" alt="" loading="lazy">`:esc(STORES[o.s].n[0].toUpperCase())}</div>
+     <span class="tc">${tl("tc")}${o.sample?" · "+tl("sample").toUpperCase():""}</span>
+   </div>
+   <div class="oinfo">
+     <div><span class="lbl">${tl("dealOffer")}</span><span class="v">${o.code?`${tl("code")}: <b>${esc(o.code)}</b>`:esc(o.offer)}</span></div>
+     <div class="sep"></div>
+     <div><span class="pillg">${STORES[o.s].n}</span><strong ${cd?`data-end="${o.ends}" style="color:var(--hot)"`:""}>${cd?`${tl("ends")} ${cd}`:tl("liveNow")}</strong></div>
+   </div>
+   <a class="buy" href="${esc(o.link)}" target="_blank" rel="sponsored nofollow noopener">${tl("buy")}</a>
+   ${shareBlock(o)}
+  </article>`;
+}
+function card(p){
+  const o=off(p),w=st.wish.has(p.id),c=STORES[p.s].c;
+  const tb=p.type?`<span class="ribbon b-${p.type}">${tl(p.type+"L")}</span>`:"";
+  const cd=p.ends?countdown(p.ends):null;
+  return `<article class="card">
+   <div class="thumb">${p.img?`<img src="${esc(p.img)}" alt="${esc(p.t)}" loading="lazy">`:`<span class="ph" style="color:color-mix(in srgb, ${c} 75%, var(--ink))">${initials(p.t)}</span>`}
+     ${tb}
+     <button class="heart" data-w="${p.id}" aria-pressed="${w}" aria-label="Save deal"><svg width="18" height="18" viewBox="0 0 24 24" fill="${w?"currentColor":"none"}" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6C19 16.5 12 21 12 21z"/></svg></button>
+     ${p.sample?`<span class="bdg b-sample">${tl("sample")}</span>`:""}
+     ${o?`<span class="off">${o}% off</span>`:""}
+   </div>
+   <div class="cb">
+     <div class="smark">${storeMark(p.s)}</div>
+     <h4><button class="tlink" data-d="${p.id}">${esc(p.t)}</button></h4>
+     <div class="good"><b>${tl("good")}:</b> ${esc(p.good)}</div>
+     <div class="pinfo">
+       <div><span class="lbl">${tl("startPrice")}</span>${p.price?`<b>${inr(p.price)}</b>`:`<span class="checkp">${tl("check")}</span>`}</div>
+       <div class="sep"></div>
+       <div>${p.mrp?`<span class="pillg">${tl("mrp")} <s>${inr(p.mrp)}</s></span><strong>${o}% off</strong>`:`<span class="pillg">${STORES[p.s].n}</span><strong>${tl("seeDeal")}</strong>`}
+         ${cd?`<div class="checked" style="color:var(--hot);font-weight:700" data-end="${p.ends}">${tl("ends")} ${cd}</div>`:`<div class="checked">${tl("checked")} ${ago(p.checked)}</div>`}</div>
+     </div>
+     <a class="buy" href="${esc(p.link)}" target="_blank" rel="sponsored nofollow noopener">${tl("buy")}</a>
+     ${shareBlock(p)}
+   </div></article>`;
+}
+
+function render(){
+  const r=filtered();
+  $("#grid").innerHTML=r.length?r.map(card).join(""):`<div class="empty">${tl("none")}</div>`;
+  $("#count").textContent=`${r.length} ${tl("results")}`;
+  $("#gtitle").textContent=st.onlyWish?tl("saved"):st.cat==="all"?tl("all"):(CATS.find(c=>c[0]===st.cat)||[])[st.lang==="te"?2:1];
+  $("#wc").textContent=st.wish.size;
+  $("#wishBtn").setAttribute("aria-pressed",st.onlyWish);
+}
+function all(){buildChrome();spot();render();renderDir();$("#offers").innerHTML=OFFERS.filter(o=>!st.stores.size||st.stores.has(o.s)).map(offerCard).join("")}
+
+function openD(id){
+  const p=findAny(id);const o=off(p);
+  $("#sheet").innerHTML=`<div class="meta"><span class="dotd" style="background:${STORES[p.s].c}"></span>${STORES[p.s].n}${p.sample?` · ${tl("sample")}`:""}</div>
+   <h3 id="mT">${esc(p.t)}</h3>
+   <div class="good"><b>${tl("good")}:</b> ${esc(p.good)}</div>
+   ${p.price?`<div class="price"><b>${inr(p.price)}</b><s>${inr(p.mrp)}</s><span style="color:var(--good);font-weight:700">${o}% off</span></div><div class="checked">${tl("checked")} ${new Date(p.checked).toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"})} IST</div>`:`<div class="checkp">${tl("check")}</div>`}
+   <div><strong>${tl("before")}</strong><ul>${p.check.map(c=>`<li>${esc(c)}</li>`).join("")}</ul></div>
+   <div class="row"><a class="buy" href="${esc(p.link)}" target="_blank" rel="sponsored nofollow noopener">${tl("buy")}</a><button class="ghost" id="closeM">${tl("close")}</button></div>
+   ${shareBlock(p)}
+   <div class="checked">As an Amazon Associate I earn from qualifying purchases. Other store links earn through ExtraPe.</div>`;
+  $("#scrim").hidden=false;$("#closeM").focus();
+}
+/* ---- Share: links point to the Adyzio product page (not the raw affiliate link), tagged with ?src= for click tracking ---- */
+const ICO={
+ wa:'<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg>',
+ share:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>',
+ copy:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+ tg:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.4 3.6 2.9 10.8c-1.2.5-1.2 1.2 0 1.6l4.7 1.5 1.8 5.6c.2.6.4.8.9.8s.6-.2.9-.5l2.3-2.2 4.7 3.5c.9.5 1.5.2 1.7-.8l3.1-14.6c.3-1.3-.5-1.8-1.6-1.3zM9.8 14.3l-.4 4.2-1.5-4.8 10.6-6.7z"/></svg>',
+ mail:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>'
+};
+const enc=encodeURIComponent;
+const shareUrl=(p,src)=>`${CONFIG.site}/${p.isOffer?"store":"product"}/${p.slug||p.id}?src=${src}`;
+const shareText=p=>p.isOffer?`🛍️ ${STORES[p.s].n}: ${p.head}\n${p.sub}${p.code?`\nCode: ${p.code}`:""}`:`🛍️ ${p.t}\n${tl("good")}: ${p.good}\n${p.price?`${inr(p.price)} (MRP ${inr(p.mrp)}) on ${STORES[p.s].n}`:`${tl("check")} on ${STORES[p.s].n}`}`;
+const waHref=p=>`https://wa.me/?text=${enc(shareText(p)+"\n👉 "+shareUrl(p,"whatsapp"))}`;
+const tgHref=p=>`https://t.me/share/url?url=${enc(shareUrl(p,"telegram"))}&text=${enc(shareText(p))}`;
+const mailHref=p=>`mailto:?subject=${enc("Deal on Adyzio: "+p.t)}&body=${enc(shareText(p)+"\n\n"+shareUrl(p,"email")+"\n\n(Adyzio may earn a commission on purchases.)")}`;
+function shareBlock(p){
+  return `<div class="shrow">
+     <a class="swa" href="${waHref(p)}" target="_blank" rel="noopener">${ICO.wa}${tl("share")}</a>
+     <button class="son" data-sh="${p.id}">${ICO.share}${tl("shareOn")}</button>
+   </div>
+   <button class="cpy" data-copy="${p.id}">${ICO.copy}${tl("copyLink")}</button>`;
+}
+const storeItem=k=>({id:"st-"+k,s:k,isOffer:true,head:st.lang==="te"?"డీల్స్ & ఆఫర్స్":"Deals & offers",sub:(st.lang==="te"?"Adyzio లో ":"Shop ")+STORES[k].n+(st.lang==="te"?" ఆఫర్స్ చూడండి":" through Adyzio"),slug:k,t:STORES[k].n,good:"",price:null,link:STORES[k].link||"#add-your-extrape-link"});
+const findAny=id=>String(id).startsWith("st-")?storeItem(String(id).slice(3)):(P.find(x=>x.id==id)||OFFERS.find(x=>x.id==id));
+const dir={g:"all",q:"",l:"",n:48};
+function renderDir(){
+  $("#gtabs").innerHTML=GROUPS.map(([k,en,te])=>`<button class="chip" data-g="${k}" aria-pressed="${dir.g===k}">${st.lang==="te"?te:en}</button>`).join("");
+  const letters="#ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  $("#az").innerHTML=`<button data-l="" aria-pressed="${dir.l===""}">All</button>`+letters.map(c=>`<button data-l="${c}" aria-pressed="${dir.l===c}">${c}</button>`).join("");
+  const q=dir.q.trim().toLowerCase();
+  const list=Object.entries(STORES).filter(([k,v])=>(dir.g==="all"||v.g===dir.g)&&(!q||v.n.toLowerCase().includes(q))&&(!dir.l||(dir.l==="#"?/^[^a-z]/i.test(v.n):v.n[0].toUpperCase()===dir.l)))
+    .sort((a,b)=>(TOP_STORES.indexOf(a[0])+1||999)-(TOP_STORES.indexOf(b[0])+1||999)||a[1].n.localeCompare(b[1].n));
+  $("#dirCount").textContent=`${list.length} ${st.lang==="te"?"stores":"stores"}`;
+  const show=list.slice(0,dir.n);
+  $("#sgrid").innerHTML=show.length?show.map(([k,v])=>`<div class="stile">
+     <div class="slogo">${v.logo?`<img src="${v.logo}" alt="${esc(v.n)}" loading="lazy">`:`<span class="stxt">${esc(v.n)}</span>`}</div>
+     <div class="sname" title="${esc(v.n)}">${esc(v.n)}</div>
+     <div class="srow"><a class="buy" href="${esc(v.link||"#add-your-extrape-link")}" target="_blank" rel="sponsored nofollow noopener">${tl("buy")}</a><button class="sic" data-sh="st-${k}" aria-label="Share ${esc(v.n)}">${ICO.share}</button></div>
+   </div>`).join(""):`<div class="empty">${tl("none")}</div>`;
+  const mb=$("#moreStores"); mb.hidden=list.length<=dir.n; mb.textContent=(st.lang==="te"?"మరిన్ని stores చూపించు":"Show all ")+` (${list.length})`;
+}
+function openShare(id){
+  const p=findAny(id);
+  $("#sheet").innerHTML=`<h3 id="mT">${tl("shareVia")}</h3>
+   <div class="good">${esc(p.t)}</div>
+   <div class="shopts">
+     <a class="shopt" href="${waHref(p)}" target="_blank" rel="noopener"><i style="background:#1fa855">${ICO.wa}</i><span>WhatsApp<small>${tl("waSub")}</small></span></a>
+     <a class="shopt" href="${tgHref(p)}" target="_blank" rel="noopener"><i style="background:#229ED9">${ICO.tg}</i><span>Telegram<small>${tl("tgSub")}</small></span></a>
+     <a class="shopt" href="${mailHref(p)}"><i style="background:#5b5f97">${ICO.mail}</i><span>Email<small>${tl("mailSub")}</small></span></a>
+   </div>
+   <div class="shurl">${esc(shareUrl(p,"copy"))}</div>
+   <div class="row"><button class="cpy" data-copy="${p.id}" style="flex:1">${ICO.copy}${tl("copyLink")}</button><button class="ghost" id="closeM">${tl("close")}</button></div>`;
+  $("#scrim").hidden=false;$("#closeM").focus();
+}
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(()=>t.hidden=true,1800)}
+
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button,a");if(!b)return;
+  if(b.dataset.c){st.cat=b.dataset.c;st.onlyWish=false;all()}
+  else if(b.dataset.s){const s=b.dataset.s;st.stores.has(s)?st.stores.delete(s):st.stores.add(s);all()}
+  else if(b.dataset.u){const u=+b.dataset.u;st.under=st.under===u?0:u;all()}
+  else if(b.dataset.w){const id=+b.dataset.w;st.wish.has(id)?st.wish.delete(id):st.wish.add(id);store("adz-wish",[...st.wish]);render()}
+  else if(b.dataset.g){dir.g=b.dataset.g;dir.n=48;renderDir()}
+  else if(b.dataset.l!==undefined&&b.closest("#az")){dir.l=b.dataset.l;dir.n=48;renderDir()}
+  else if(b.id==="moreStores"){dir.n=9999;renderDir()}
+  else if(b.dataset.sh){openShare(b.dataset.sh)}
+  else if(b.dataset.d){openD(b.dataset.d)}
+  else if(b.id==="closeM"){$("#scrim").hidden=true}
+  else if(b.dataset.copy){const p=findAny(b.dataset.copy);const url=shareUrl(p,"copy");
+    try{navigator.clipboard.writeText(url).then(()=>toast(tl("copied")),()=>toast(url))}catch(err){toast(url)}}
+  else if(b.id==="wishBtn"){st.onlyWish=!st.onlyWish;render()}
+  else if(b.id==="lang"){st.lang=st.lang==="en"?"te":"en";store("adz-lang",st.lang);all()}
+  else if(b.id==="theme"){const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.dataset.theme=dark?"light":"dark"}
+  else if(b.id==="reset"){Object.assign(st,{cat:"all",q:"",min:"",max:"",minoff:0,sort:"hot",under:0,onlyWish:false});st.stores.clear();st.types.clear();
+    ["#q","#pmin","#pmax"].forEach(s=>$(s).value="");$("#minoff").value="0";$("#sort").value="hot";document.querySelectorAll(".ft").forEach(x=>x.checked=false);all()}
+});
+$("#scrim").addEventListener("click",e=>{if(e.target.id==="scrim")$("#scrim").hidden=true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#scrim").hidden=true});
+$("#q").addEventListener("input",e=>{st.q=e.target.value;render()});
+$("#sq").addEventListener("input",e=>{dir.q=e.target.value;dir.n=48;renderDir()});
+$("#pmin").addEventListener("input",e=>{st.min=e.target.value;render()});
+$("#pmax").addEventListener("input",e=>{st.max=e.target.value;render()});
+$("#minoff").addEventListener("change",e=>{st.minoff=+e.target.value;render()});
+$("#sort").addEventListener("change",e=>{st.sort=e.target.value;render()});
+document.querySelectorAll(".ft").forEach(c=>c.addEventListener("change",()=>{c.checked?st.types.add(c.value):st.types.delete(c.value);render()}));
+$("#tgLink").href=CONFIG.telegram;$("#waLink").href=CONFIG.whatsapp;
+setInterval(()=>document.querySelectorAll("[data-end]").forEach(el=>{const c=countdown(el.dataset.end);el.textContent=c?`${tl("ends")} ${c}`:"Ended"}),1000);
+all();
+</script>
