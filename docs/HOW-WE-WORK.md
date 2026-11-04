@@ -18,15 +18,15 @@ If the three ever differ, **GitHub is correct**.
 | MINOR | A new feature, tool, plan or page set is added | 0.4.0 → **0.5.0** |
 | PATCH | A fix or small change to something that exists | 0.5.0 → **0.5.1** |
 
-- The project number is in [`VERSION`](../VERSION). Each release gets a GitHub tag (`v0.5.0`) and a CHANGELOG entry.
+- The project number is in [`VERSION`](../VERSION). Each release gets a CHANGELOG entry with its commit ID (and a GitHub tag `v0.5.0` when tags can be pushed).
 - **Each part has its own version too.** For example the WordPress plugin `adyzio-core` has its own number (1.6, 1.7.0…) and its own changelog inside its folder. The project CHANGELOG mentions it when it changes.
-- Old versions are never lost: GitHub → **Tags** → pick a version → download.
+- Old versions are never lost: take the commit ID from the CHANGELOG and open `github.com/MrAdithya26/Adyzio/tree/<commit ID>` → Code → Download ZIP.
 
 ## 3. What happens after every piece of work
 
 1. Files are saved in the right folder (see the README folder map).
 2. Commit to GitHub with a clear message.
-3. If it's a new feature, fix or plan: bump `VERSION`, add a CHANGELOG entry, add a tag.
+3. If it's a new feature, fix or plan: bump `VERSION` and add a CHANGELOG entry with the commit ID.
 4. Add or update the chat note in `docs/chat-log/` (date, what was asked, what was built, decisions, open items).
 5. Record any important decision in `docs/DECISIONS.md`.
 6. Update `docs/PROJECT-STATUS.md` if the status changed.
