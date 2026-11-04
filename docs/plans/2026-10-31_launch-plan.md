@@ -228,7 +228,7 @@ The old adyzio-core WordPress plugin already has working code for U3, U4, U6 and
 
 | Place | What |
 |---|---|
-| **GitHub `MrAdithya26/Adyzio`** | `docs/LAUNCH-PLAN.md` (this plan) · `apps/link-tools/` (link tool + tests) · `data/categories.csv` · `data/stores.csv` · `data/affiliate-links/link-sheet-template.csv` · future website upgrades |
+| **GitHub `MrAdithya26/Adyzio`** | `docs/plans/2026-10-31_launch-plan.md` (this plan) · `apps/link-tools/` (link tool + tests) · `data/categories.csv` · `data/stores.csv` · `data/affiliate-links/link-sheet-template.csv` · future website upgrades |
 | **Google Drive → 04 Adyzio – adyzio.com** | This plan as a Google Doc · **Adyzio Link Sheet** (Google Sheet with Link Sheet + Categories tabs) · older launch guide, README and test report |
 | **Hostinger** | The live site and database. Back up weekly (database + `uploads/`) and download a CSV export. |
 

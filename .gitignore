@@ -1,9 +1,10 @@
 __pycache__/
 *.pyc
+
+# Private business files: kept on your computer and Google Drive only, never on GitHub
+private/*
+!private/README.md
+
+# Local settings with your own IDs
 config.json
-inbox/
-/deals.xlsx
-/deals.csv
-converted*.txt
-extrape-batch*.txt
-import-*.csv
+.env
