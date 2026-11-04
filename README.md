@@ -28,5 +28,6 @@ Adyzio publishes product deals and recommendations using its own affiliate links
 ## Changelog
 
 - **2026-11-02** — Link tool: `collect` (deal posts from WhatsApp/Telegram/Pinterest/deal sites → Excel, foreign tags removed, your tag added), `extrape-out`/`extrape-in`, Excel sheets, Amazon prices/images kept out of the site export.
+- **2026-11-02** — Deals page v2 design (`website/deals-v2/`): store offer cards, logo product cards, share buttons, 272-store directory from ExtraPe (`data/extrape-stores.csv`).
 - **2026-10-31** — Repository set up with folder structure.
 - **2026-10-31** — Launch plan, link tool (convert / validate / export / captions, with tests), category map, store list and Link Sheet template.
