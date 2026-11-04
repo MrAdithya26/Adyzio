@@ -14,6 +14,8 @@ Everything for **[Adyzio](https://www.adyzio.com)**, the affiliate deals hub of 
 
 How versions and syncing work: [`docs/HOW-WE-WORK.md`](docs/HOW-WE-WORK.md).
 
+**Drive shortcuts:** [Adyzio Drive folder](https://drive.google.com/drive/folders/1ilDpymLtkPBWQFrefUXve27wLbz0k68o) · [Project handbook](https://docs.google.com/document/d/1NWBFtC8_BJi-9gIobvaATrjrxM7izNhKZPet_u4n05M/edit) · [Chat log](https://docs.google.com/document/d/1YMkYgV-mOnEglZRSr0aXRu3-zvqu-V_KgFVhwMrDJCc/edit) · [Adyzio Link Sheet](https://docs.google.com/spreadsheets/d/1XuSXe9SBCTFMHSjr0kNoiWmCFYJvA91Ywjm8Qz2l-1g/edit)
+
 ## Folder map
 
 | Folder | What goes here |

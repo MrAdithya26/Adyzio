@@ -27,3 +27,5 @@ Open `index.html` in a browser to see it. Products and offers in it are **sample
 ## Next step
 
 Move this layout into the PHP site templates (deploy/adyzio branch) so products and offers come from the admin panel.
+
+> On your computer the 272 logo files are packed as `assets/stores-logos.zip` — right-click → Extract All here if you need them as separate files. GitHub keeps them unpacked in `assets/stores/`.
