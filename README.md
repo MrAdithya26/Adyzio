@@ -27,5 +27,6 @@ Adyzio publishes product deals and recommendations using its own affiliate links
 
 ## Changelog
 
+- **2026-11-02** — Link tool: `collect` (deal posts from WhatsApp/Telegram/Pinterest/deal sites → Excel, foreign tags removed, your tag added), `extrape-out`/`extrape-in`, Excel sheets, Amazon prices/images kept out of the site export.
 - **2026-10-31** — Repository set up with folder structure.
 - **2026-10-31** — Launch plan, link tool (convert / validate / export / captions, with tests), category map, store list and Link Sheet template.

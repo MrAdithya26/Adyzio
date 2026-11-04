@@ -1,2 +1,9 @@
 __pycache__/
 *.pyc
+config.json
+inbox/
+/deals.xlsx
+/deals.csv
+converted*.txt
+extrape-batch*.txt
+import-*.csv
