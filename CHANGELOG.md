@@ -4,7 +4,7 @@ Every version of Adyzio, newest first. Version numbers follow **MAJOR.MINOR.PATC
 Each version lists its **commit ID**. To see or download exactly that version, open `https://github.com/MrAdithya26/Adyzio/tree/<commit ID>` and press Code → Download ZIP.
 
 ## v0.7.0 — 2026-11-22 — Site audit, growth plan, product list
-Commit: see the commit titled "v0.7.0"
+Commit: [`112c78e`](https://github.com/MrAdithya26/Adyzio/tree/112c78e)
 - Audit of the live adyzio.com (215 products, 796 categories, 5 crashing pages, no disclosure on product pages). Plan doc: "Adyzio – Site Audit and Growth Plan (22 Nov 2026)" (Claude Doc, linked in docs/plans/README.md).
 - `data/products/2026-11-22_products-master.csv`: every product on the site with category, subcategory, title, page, store and affiliate link, plus issues found. Same data as the Google Sheet "Adyzio – Products Master (22 Nov 2026)" in Drive › 04 Adyzio › data.
 - Decisions: one master sheet with store columns (not one sheet per category); one product page with a button per store; phases with gates up to digital products and dropshipping.
