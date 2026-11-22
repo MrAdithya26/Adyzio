@@ -3,6 +3,14 @@
 Every version of Adyzio, newest first. Version numbers follow **MAJOR.MINOR.PATCH** (explained in [`docs/HOW-WE-WORK.md`](docs/HOW-WE-WORK.md)).
 Each version lists its **commit ID**. To see or download exactly that version, open `https://github.com/MrAdithya26/Adyzio/tree/<commit ID>` and press Code → Download ZIP.
 
+## v0.8.0 — 2026-11-22 — 140-reel posting schedule (Dec 2026)
+Commit: see `git log` (the line after this commit adds the ID)
+- New `marketing/reels-2026-12/Adyzio_Reels_Schedule_Dec2026_v1.xlsx`: one row per reel (140) with day, date, time, reel and thumbnail file, DM keyword "LINK", planned adyzio.com page, Amazon/Flipkart/Meesho search links, empty yellow columns for 3 product links and 3 affiliate links, and per-platform posted status. Captions tab fills the page link into every platform's caption; the Amazon disclosure line appears only when an Amazon link is filled.
+- Made from the uploaded Adyzio_Product_Links.xlsx and Adyzio_Social_Captions.xlsx; those originals were not changed. `build_schedule.py` rebuilds it.
+- Dates move from one cell (Start!B1), 5 reels a day, 28 days. Start date: the day after the links and pages are ready (Adithya, 22 Nov).
+- Decisions: DMs and captions send one adyzio.com page per reel (with a button per store), not raw affiliate links; affiliate links will be found with a new "Link finder" in extension 1.8.0.
+- Checked: all 140 reels and thumbnails are in D:\ABD Innovations\Adyzio\marketing\reels-2026-12 and match the sheet. Adithya confirmed the reels are his own edits with his voiceover.
+
 ## v0.7.0 — 2026-11-22 — Site audit, growth plan, product list
 Commit: [`112c78e`](https://github.com/MrAdithya26/Adyzio/tree/112c78e)
 - Audit of the live adyzio.com (215 products, 796 categories, 5 crashing pages, no disclosure on product pages). Plan doc: "Adyzio – Site Audit and Growth Plan (22 Nov 2026)" (Claude Doc, linked in docs/plans/README.md).
