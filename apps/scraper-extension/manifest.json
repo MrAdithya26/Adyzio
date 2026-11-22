@@ -1,8 +1,8 @@
-﻿{
+{
   "manifest_version": 3,
   "name": "Deal Scraper & Affiliate Converter",
-  "version": "1.7.0",
-  "description": "Scrape products from Amazon, Flipkart, Myntra, Ajio, Meesho and more into Excel + Google Sheet + Drive images, and convert links to affiliate links (ExtraPe / Amazon SiteStripe). Export whole Wishlink creator profiles.",
+  "version": "1.8.0",
+  "description": "Scrape products from Amazon, Flipkart, Myntra, Ajio, Meesho and more into Excel + Google Sheet + Drive images, and convert links to affiliate links (ExtraPe / Amazon SiteStripe). Export whole Wishlink creator profiles. Link finder: walk a product list store by store and fill product + affiliate links.",
   "permissions": [
     "storage",
     "unlimitedStorage",
@@ -66,7 +66,8 @@
         "*://affiliate-program.amazon.com/*"
       ],
       "js": [
-        "content/floating.js"
+        "content/floating.js",
+        "content/finder-bar.js"
       ],
       "run_at": "document_idle"
     }

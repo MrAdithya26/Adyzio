@@ -6,7 +6,8 @@ importScripts(
   'bg/gdrive.js',
   'bg/excel.js',
   'bg/converter.js',
-  'bg/wishlink.js'
+  'bg/wishlink.js',
+  'bg/finder.js'
 );
 
 const S = self.DealStores;
@@ -676,6 +677,9 @@ chrome.runtime.onConnect.addListener((port) => {
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   (async () => {
+    if (String(msg.type || '').startsWith('finder')) {
+      return DealFinder.handle(msg, sender, { getSettings: () => DealSettings.getSettings(), converter: DealConverter });
+    }
     switch (msg.type) {
       case 'scrape': {
         const tabId = msg.tabId || (sender.tab && sender.tab.id);

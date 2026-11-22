@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Adyzio Link finder</title>
+<link rel="stylesheet" href="finder.css"></head>
+<body>
+<header><h1>🔗 Link finder</h1><span class="muted">Find each product on each store → product link + affiliate link</span></header>
+<section class="card">
+  <h2>1. Load your list</h2>
+  <p class="muted">Excel or CSV with a <b>Product</b> column and store search columns named like <b>Amazon search</b>, <b>Flipkart search</b>, <b>Meesho search</b>. The Reels Schedule file works as it is (sheet "Schedule").</p>
+  <input type="file" id="file" accept=".xlsx,.xls,.csv">
+  <div id="loadMsg" class="muted"></div>
+</section>
+<section class="card hidden" id="runCard">
+  <h2>2. Find the links</h2>
+  <div id="summary"></div>
+  <div id="current" class="current"></div>
+  <div class="row">
+    <button class="primary" id="go">▶ Start / Resume</button>
+    <button id="export">⬇ Download links file</button>
+  </div>
+  <p class="muted">A store tab opens with the search. Click the right product, then press <b>✓ Use this product</b> in the dark bar at the top. It saves both links and opens the next store. Your progress is kept even if you close Chrome.</p>
+  <p class="muted">To put the links in the Schedule: open the downloaded file, copy columns C to I (from row 2 down), and in the Schedule sheet click cell M2 → right-click → Paste special → Values only.</p>
+</section>
+<section class="card hidden" id="listCard">
+  <h2>Products</h2>
+  <label class="muted"><input type="checkbox" id="onlyOpen"> Show only products still needing links</label>
+  <table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+</section>
+<script src="lib/xlsx.full.min.js"></script>
+<script src="finder.js"></script>
+</body></html>

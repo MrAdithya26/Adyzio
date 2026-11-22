@@ -3,6 +3,12 @@
 Every version of Adyzio, newest first. Version numbers follow **MAJOR.MINOR.PATCH** (explained in [`docs/HOW-WE-WORK.md`](docs/HOW-WE-WORK.md)).
 Each version lists its **commit ID**. To see or download exactly that version, open `https://github.com/MrAdithya26/Adyzio/tree/<commit ID>` and press Code → Download ZIP.
 
+## v0.9.0 — 2026-11-22 — Extension 1.8.0: Link finder
+Commit: see git log
+- `apps/scraper-extension/` 1.7.0 → **1.8.0**. New: Link finder page (`finder.html/js/css`), store-page bar (`content/finder-bar.js`), walk logic (`bg/finder.js`), popup button. Walks a product list store by store; you open the matching product and press "Use this product"; it saves the product link + affiliate link and opens the next store. Exports a links file whose columns C–I match Schedule M–S.
+- Nothing removed; every 1.7.0 feature unchanged. 1.7.0 stays in git history (commit 4ed9713 and earlier) and as `apps/affiliate-scraper-extension-v1.7.0.zip` on the computer.
+- Tested here with the real Schedule file (load, use, not sold, back, skip, export). Still to test in Chrome by Adithya: SiteStripe and ExtraPe conversions on real pages, Meesho through ExtraPe.
+
 ## v0.8.1 — 2026-11-22 — Reels launch plan
 Commit: see git log
 - New plan "Adyzio – Reels Launch Plan (Dec 2026)" (Claude Doc, linked in docs/plans/README.md). Priority 1 is the 140 reels + auto-DM + their product pages on adyzio.com; the 1000+ products follow after. Nothing removed.

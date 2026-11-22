@@ -23,6 +23,18 @@ Excel/Sheet columns follow your deals template (see below).
 2. Click **Load unpacked** and select this folder (`affiliate-scraper-extension`).
 3. Pin the extension (puzzle icon → pin). Click the ⚙ in the popup to open **Settings**.
 
+## Link finder (new in 1.8.0)
+
+Fills product links and affiliate links for a list of products, store by store (made for the 140 Dec 2026 reels; works for any list).
+
+1. Extension icon → **🔗 Link finder** → choose the file. It needs a **Product** column and search columns named **Amazon search**, **Flipkart search**, **Meesho search** (any "<Store> search" works). The Reels Schedule file works as it is.
+2. Press **▶ Start / Resume**. A store tab opens with the search.
+3. Click the product that matches the reel. A dark bar at the top shows **✓ Use this product** (it turns on only on a product page). Press it: the product link and affiliate link are saved (Amazon → SiteStripe, others → ExtraPe, same settings as before) and the next store opens.
+4. **Not sold here** → next store. **Skip product** → next product. **↶ Back** → redo the last store. **Pause** → stop; progress is kept in Chrome and **Start / Resume** carries on.
+5. **⬇ Download links file** any time. Columns C–I of that file are in the same order as Schedule columns M–S: copy them and in the Schedule press M2 → Paste special → Values only.
+
+If a conversion fails, the product link is still saved and the Notes column says so. Loading a new list first downloads the old progress as a "_backup" file.
+
 ## Setup 1: Google Drive + Google Sheet (links only, no sign-in in the extension)
 
 Google does not let any app upload files to Drive with only a shared link, even "anyone with the link can edit". So you add a small script to your own Google account once. It saves the images and writes the sheet rows.

@@ -196,6 +196,7 @@ async function init() {
     $('queueBtn').textContent = q.count ? 'Process' : 'Check again';
   }).catch(() => {});
   $('openExtrapeBtn').onclick = () => chrome.tabs.create({ url: settings.extrapeConverterUrl || DealSettings.BUILT_IN_EXTRAPE_URL });
+  $('finderBtn').onclick = () => chrome.tabs.create({ url: chrome.runtime.getURL('finder.html') });
   $('uploadFileBtn').onclick = () => chrome.tabs.create({ url: chrome.runtime.getURL('convert-file.html') });
 
   $('bulkBtn').onclick = async () => {
