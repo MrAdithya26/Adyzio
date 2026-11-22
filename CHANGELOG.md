@@ -4,7 +4,7 @@ Every version of Adyzio, newest first. Version numbers follow **MAJOR.MINOR.PATC
 Each version lists its **commit ID**. To see or download exactly that version, open `https://github.com/MrAdithya26/Adyzio/tree/<commit ID>` and press Code → Download ZIP.
 
 ## v0.5.0 — 2026-11-22 — Plugin and extension code saved; Deals Hub is the master sheet
-Commit: see `git log` (the commit titled "v0.5.0")
+Commit: [`a3bad51`](https://github.com/MrAdithya26/Adyzio/tree/a3bad51)
 - Added `website/adyzio-core/`: Adyzio Core **1.6.0**, the WordPress plugin running on adyzio.com (homepage, 726 categories, Excel/CSV import, Google Sheet sync every 15 minutes, Rank Math SEO). Copied unchanged from `adyzio-core-1.6.0.zip` (4 Nov). Its own version history is in `website/adyzio-core/readme.txt`.
 - Added `apps/scraper-extension/`: Chrome extension "Deal Scraper & Affiliate Converter" **1.3.0** (4 Nov): scrape store pages → Google Sheet via your Apps Script, convert links (Amazon SiteStripe, others via ExtraPe in your logged-in browser). Copied unchanged from `affiliate-scraper-extension (2).zip`.
 - Decision: **Adyzio Deals Hub** (Google Sheet) is the master product sheet. Adyzio Link Sheet is kept as history.
