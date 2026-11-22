@@ -4,7 +4,8 @@ All Adyzio plans, newest first. The **current** plan is the one to follow; older
 
 | Date | Plan | Where | Status |
 |---|---|---|---|
-| 2026-11-04 | Adyzio Pro Website Plan — 7-Day Build (plan, 726-category tree, policy page texts) | [Claude Doc](https://claude.ai/artifact/5YANnoDhLj87Y7xBz69pSD) | **Current** |
+| 2026-11-22 | Adyzio – Site Audit and Growth Plan: audit, Amazon rules, multi-store products, data safety, SEO, AdSense, social, earning roadmap, 5-phase timeline | [Claude Doc](https://claude.ai/artifact/XrTepsEBaT4y5cfjqw7v4Y) · product list [Google Sheet](https://docs.google.com/spreadsheets/d/1LQGAN5p5gCUdvrHVuktWSEHnASo8fkrpULmrSZa8KPA/edit) | **Current** (the 7-Day Build plan is replaced by its phases 1–2) |
+| 2026-11-04 | Adyzio Pro Website Plan — 7-Day Build (plan, 726-category tree, policy page texts) | [Claude Doc](https://claude.ai/artifact/5YANnoDhLj87Y7xBz69pSD) | Reference (category tree, policy texts); build steps moved into the 22 Nov plan |
 | 2026-11-02 | Adyzio Complete Website Plan (brand, tech stack, pages, SEO, content, roadmap to first commission by March 2027) | [Claude Doc](https://claude.ai/artifact/M43CxEZzUzwiE2CHzq5tWL) | Current for brand, SEO and content; the 7-day plan replaces its build steps |
 | 2026-10-31 | Complete launch and implementation plan (link pipeline, categories, tools) | [`2026-10-31_launch-plan.md`](2026-10-31_launch-plan.md) · [Google Doc](https://docs.google.com/document/d/1Z8l4waepl_DCPWCNq8iLwLLuWxKzbnm8qwIXyKwjO78/edit) | Replaced by the WordPress plans for the website; link-tool parts still apply |
 | 2026-10-31 | Project status and plan | [Google Doc](https://docs.google.com/document/d/16tKSy_Z7ErQH1JuXPtXqdJGM9ocJHryFNlg2I5itx_w/edit) | History |

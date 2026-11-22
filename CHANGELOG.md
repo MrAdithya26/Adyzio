@@ -3,6 +3,12 @@
 Every version of Adyzio, newest first. Version numbers follow **MAJOR.MINOR.PATCH** (explained in [`docs/HOW-WE-WORK.md`](docs/HOW-WE-WORK.md)).
 Each version lists its **commit ID**. To see or download exactly that version, open `https://github.com/MrAdithya26/Adyzio/tree/<commit ID>` and press Code → Download ZIP.
 
+## v0.7.0 — 2026-11-22 — Site audit, growth plan, product list
+Commit: see the commit titled "v0.7.0"
+- Audit of the live adyzio.com (215 products, 796 categories, 5 crashing pages, no disclosure on product pages). Plan doc: "Adyzio – Site Audit and Growth Plan (22 Nov 2026)" (Claude Doc, linked in docs/plans/README.md).
+- `data/products/2026-11-22_products-master.csv`: every product on the site with category, subcategory, title, page, store and affiliate link, plus issues found. Same data as the Google Sheet "Adyzio – Products Master (22 Nov 2026)" in Drive › 04 Adyzio › data.
+- Decisions: one master sheet with store columns (not one sheet per category); one product page with a button per store; phases with gates up to digital products and dropshipping.
+
 ## v0.6.0 — 2026-11-22 — Scraper extension 1.7.0 (Wishlink profiles + dashboard)
 Commit: [`bbb7ce1`](https://github.com/MrAdithya26/Adyzio/tree/bbb7ce1)
 - `apps/scraper-extension/` updated from 1.3.0 to **1.7.0** (built 18 Nov in another Claude workspace; copied unchanged from `affiliate-scraper-extension-v1.7.0.zip`). The 1.3.0 files stay in git history (commit a19f004) and as `apps/affiliate-scraper-extension-1.3.0.zip` on the computer.
