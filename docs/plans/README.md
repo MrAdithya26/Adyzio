@@ -15,3 +15,5 @@ All Adyzio plans, newest first. The **current** plan is the one to follow; older
 | 2026-10-27 | Adyzio Core – how it works (old WordPress plugin 1.0.0) | [Google Doc](https://docs.google.com/document/d/1Qdh96IgwIciO-t1EC2wG96RQcPjPMu0FcHCaU_pvFws/edit) | History |
 
 The two Claude Docs are live documents you can edit. To keep a file copy, open the doc and export it to Word, PDF or Google Docs.
+
+- **2026-11-22 — Reels Launch Plan (Dec 2026)** (current priority): [Claude Doc](https://claude.ai/artifact/Ho5kSNJojcxwoYsiRQmLUw). 140 reels, auto-DM, product pages live; posting 29 Nov–26 Dec if gates pass. Phases 0–5: accounts → link finder (ext 1.8.0) → plugin 1.7.0 reels edition → pages live → auto-DM + scheduling → run the month; then 1000+ products.

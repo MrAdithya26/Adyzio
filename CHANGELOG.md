@@ -3,6 +3,10 @@
 Every version of Adyzio, newest first. Version numbers follow **MAJOR.MINOR.PATCH** (explained in [`docs/HOW-WE-WORK.md`](docs/HOW-WE-WORK.md)).
 Each version lists its **commit ID**. To see or download exactly that version, open `https://github.com/MrAdithya26/Adyzio/tree/<commit ID>` and press Code → Download ZIP.
 
+## v0.8.1 — 2026-11-22 — Reels launch plan
+Commit: see git log
+- New plan "Adyzio – Reels Launch Plan (Dec 2026)" (Claude Doc, linked in docs/plans/README.md). Priority 1 is the 140 reels + auto-DM + their product pages on adyzio.com; the 1000+ products follow after. Nothing removed.
+
 ## v0.8.0 — 2026-11-22 — 140-reel posting schedule (Dec 2026)
 Commit: [`44ff042`](https://github.com/MrAdithya26/Adyzio/tree/44ff042)
 - New `marketing/reels-2026-12/Adyzio_Reels_Schedule_Dec2026_v1.xlsx`: one row per reel (140) with day, date, time, reel and thumbnail file, DM keyword "LINK", planned adyzio.com page, Amazon/Flipkart/Meesho search links, empty yellow columns for 3 product links and 3 affiliate links, and per-platform posted status. Captions tab fills the page link into every platform's caption; the Amazon disclosure line appears only when an Amazon link is filled.
