@@ -24,6 +24,7 @@
     { id: 'swiggy', name: 'Swiggy Instamart', hosts: ['swiggy.com'] },
     { id: 'bigbasket', name: 'BigBasket', hosts: ['bigbasket.com'] },
     { id: 'extrape', name: 'ExtraPe', hosts: ['extrape.com', 'extp.in'] },
+    { id: 'wishlink', name: 'Wishlink', hosts: ['wishlink.com'] },
   ];
 
   // Query parameters that only track clicks and can always be removed.
@@ -48,6 +49,9 @@
 
   // Short store links (amzn.to, fkrt.it, ...) must be expanded before cleaning.
   function isShortLink(url) {
+    if (/^(wishlink\.com|wishlink\.sng\.link)$/i.test(hostOf(url))) {
+      try { return /^\/share\//i.test(new URL(url).pathname) || /sng\.link$/i.test(new URL(url).hostname); } catch (e) { return false; }
+    }
     return /^(amzn\.to|amzn\.in|amzn\.eu|a\.co|fkrt\.it|fkrt\.co|fkrt\.cc|myntr\.it|ajiio\.in|extp\.in|bit\.ly|tinyurl\.com|cutt\.ly)$/i.test(hostOf(url));
   }
 
@@ -75,7 +79,11 @@
       keep.forEach((k) => { if (u.searchParams.get(k)) out.searchParams.set(k, u.searchParams.get(k)); });
       return out.toString();
     }
-    [...u.searchParams.keys()].forEach((k) => { if (TRACKING_PARAMS.test(k)) u.searchParams.delete(k); });
+    // Also drop parameters left by creator platforms (Wishlink, AppsFlyer) so the link is clean before conversion.
+    [...u.searchParams.keys()].forEach((k) => {
+      const v = u.searchParams.get(k) || '';
+      if (TRACKING_PARAMS.test(k) || /^(af_\w+|atgSessionId|clickid|affiliate_id|is_retargeting|deep_link_value|gad_\w+|gbraid|wbraid)$/i.test(k) || /wishlink/i.test(v)) u.searchParams.delete(k);
+    });
     return u.toString();
   }
 

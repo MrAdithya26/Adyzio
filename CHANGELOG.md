@@ -3,6 +3,12 @@
 Every version of Adyzio, newest first. Version numbers follow **MAJOR.MINOR.PATCH** (explained in [`docs/HOW-WE-WORK.md`](docs/HOW-WE-WORK.md)).
 Each version lists its **commit ID**. To see or download exactly that version, open `https://github.com/MrAdithya26/Adyzio/tree/<commit ID>` and press Code → Download ZIP.
 
+## v0.6.0 — 2026-11-22 — Scraper extension 1.7.0 (Wishlink profiles + dashboard)
+Commit: see the commit titled "v0.6.0"
+- `apps/scraper-extension/` updated from 1.3.0 to **1.7.0** (built 18 Nov in another Claude workspace; copied unchanged from `affiliate-scraper-extension-v1.7.0.zip`). The 1.3.0 files stay in git history (commit a19f004) and as `apps/affiliate-scraper-extension-1.3.0.zip` on the computer.
+- New in 1.7.0: Wishlink profile → Excel (every product, real store link), Apps Script dashboard for PC and phone (Overview, Platforms, Categories, Products, Add links, Activity), phone Queue processed every 15 minutes, product Status (Scraped → Converted → Live), Live tab, automatic copy of Live products into the Link Sheet tab of Adyzio Deals Hub, access key.
+- Found, not fixed yet: plugin 1.6 creates any category name it doesn't know (store categories like "Mobiles & Accessories" would become new main categories), and it would show scraped Amazon prices for 24 hours. Fix planned in Adyzio Core 1.7.0.
+
 ## v0.5.0 — 2026-11-22 — Plugin and extension code saved; Deals Hub is the master sheet
 Commit: [`a3bad51`](https://github.com/MrAdithya26/Adyzio/tree/a3bad51)
 - Added `website/adyzio-core/`: Adyzio Core **1.6.0**, the WordPress plugin running on adyzio.com (homepage, 726 categories, Excel/CSV import, Google Sheet sync every 15 minutes, Rank Math SEO). Copied unchanged from `adyzio-core-1.6.0.zip` (4 Nov). Its own version history is in `website/adyzio-core/readme.txt`.

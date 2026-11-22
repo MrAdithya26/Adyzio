@@ -318,6 +318,10 @@ async function finish(cancelled) {
   const total = Object.keys(state.results).length;
   $('download').classList.remove('hidden');
   let msg = `${cancelled ? 'Stopped. ' : ''}Converted ${ok} of ${total} link(s). Click "Download filled file".`;
+  // Stopped: download what was converted so far straight away.
+  if (cancelled) {
+    try { download(); msg = `Stopped. Converted ${ok} of ${total} link(s). The file with the links converted so far was downloaded.`; } catch (e) { /* user can still click Download */ }
+  }
   if ($('saveDrive').checked) {
     try {
       const out = outputFile();
@@ -360,7 +364,7 @@ function start() {
       status(m.error, false);
     }
   });
-  port.postMessage({ type: 'start', items: state.items });
+  port.postMessage({ type: 'start', items: state.items, fileName: state.fileName });
 }
 
 async function loadFile(file) {

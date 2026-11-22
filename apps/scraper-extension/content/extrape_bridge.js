@@ -1,4 +1,4 @@
-// Runs inside the ExtraPe converter page. Pastes one link, presses Convert, and returns the new link.
+// Runs inside the ExtraPe converter page (or any affiliate network's converter page). Pastes one link, presses Convert, and returns the new link.
 // Uses your logged-in ExtraPe session. Selectors can be overridden in Settings if ExtraPe changes its page.
 (function () {
   if (window.__extrapeConvert) return;
@@ -87,7 +87,7 @@
     const input = findInput(cfg);
     if (!input) {
       const loginHint = /log\s*in|sign\s*in|otp/i.test(document.body.innerText) ? ' It looks like you are not logged in to ExtraPe.' : '';
-      return { ok: false, error: 'Could not find the ExtraPe link box on ' + location.href + '.' + loginHint + ' Set the converter page URL / selectors in Settings.' };
+      return { ok: false, noLinkBox: true, error: 'Could not find the link box on ' + location.href + '.' + loginHint + ' Check the converter page URL / selectors in Settings.' };
     }
     const before = new Set(pageUrls(cfg.output));
     setValue(input, '');

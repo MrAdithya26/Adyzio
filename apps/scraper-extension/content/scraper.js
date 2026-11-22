@@ -404,6 +404,7 @@
     let lastHeight = 0;
     let stable = 0;
     for (let i = 0; i < maxSteps; i++) {
+      if (window.__dealStop) break; // Stop pressed: keep what is loaded so far
       window.scrollBy(0, Math.round(window.innerHeight * 0.9));
       await sleep(700);
       const h = document.documentElement.scrollHeight;
@@ -419,6 +420,7 @@
 
   window.__dealScrape = async function (opts) {
     opts = opts || {};
+    window.__dealStop = false;
     const store = S.detectStore(location.href);
     const isDetail = PRODUCT_PAGE[store.id] ? PRODUCT_PAGE[store.id]() : false;
     let products = [];

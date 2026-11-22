@@ -14,11 +14,11 @@
       <p class="help">Google does not let any app upload to Drive with only a shared link. So you add a small script to <b>your own</b> Google account once. It saves the images and writes the sheet rows for the extension.</p>
       <ol class="steps">
         <li>Open <a href="https://script.google.com/home/projects/create" target="_blank">script.google.com → New project</a>.</li>
-        <li>Delete what is there, paste the script below (<b>Copy script</b>), press <b>Save</b>.</li>
+        <li>Delete what is there in <b>Code.gs</b> and paste the script (<b>Copy script</b>). Then <b>+ → HTML</b>, name it <b>Dashboard</b>, and paste <b>Copy dashboard</b> into it. Press <b>Save</b>.</li>
         <li><b>Deploy → New deployment</b> → gear icon → <b>Web app</b>. Execute as: <b>Me</b>. Who has access: <b>Anyone</b>. Deploy, then <b>Authorize access</b> and allow.</li>
-        <li>Copy the <b>Web app URL</b> (ends in <code>/exec</code>) into the box below.</li>
+        <li>Copy the <b>Web app URL</b> (ends in <code>/exec</code>) into the box below. Open the same URL in your browser or phone: that is your dashboard. The first time, choose an access key and enter it below too.</li><li>Already set up before? Paste both files again, then <b>Deploy → Manage deployments → ✎ → Version: New version → Deploy</b>. The URL stays the same.</li>
       </ol>
-      <div class="btn-row"><button type="button" id="copyScript">Copy script</button><button type="button" id="toggleScript">Show script</button></div>
+      <div class="btn-row"><button type="button" id="copyScript">Copy script (Code.gs)</button><button type="button" id="copyDash">Copy dashboard (Dashboard.html)</button><button type="button" id="toggleScript">Show script</button></div>
       <textarea id="scriptCode" rows="12" readonly class="hidden"></textarea>
 
       <label>Apps Script Web app URL
@@ -32,6 +32,10 @@
         <input id="sheetLink" placeholder="https://docs.google.com/spreadsheets/d/…">
         <small>Rows are added in the deals-template columns. The Drive Image Link column points to the matching image.</small>
       </label>
+      <label>Access key
+        <input id="accessKey" type="password" placeholder="Same key you chose on the dashboard">
+        <small>Open the web app URL in your browser: that is your dashboard. The first time, it asks you to choose an access key. Put the same key here so only you can write to your sheet.</small>
+      </label>
       <label>Sheet tab name (optional)
         <input id="sheetTab" placeholder="Blank = first tab">
       </label>
@@ -41,9 +45,11 @@
       <div class="checks">
         <label><input type="checkbox" id="uploadImages"> Save product images to the Drive folder</label>
         <label><input type="checkbox" id="downloadExcelLocally"> Also download the Excel file to this computer</label>
+        <label><input type="checkbox" id="autoQueue"> Process links added on the dashboard / phone automatically (every 15 minutes, while Chrome is open)</label>
       </div>
       <div class="btn-row">
         <button type="button" id="testDrive" class="primary">Save &amp; test links</button>
+        <button type="button" id="openDash">Open dashboard</button>
       </div>
       <div id="driveResult" class="result"></div>
     </section>
@@ -82,9 +88,10 @@
 
       <div data-mode="web">
         <label>ExtraPe link-converter page URL
-          <input id="extrapeConverterUrl" placeholder="https://www.extrape.com/…">
-          <small>Log in to ExtraPe, open the page where you paste a link to convert it, and copy that page's address here.</small>
+          <input id="extrapeConverterUrl" placeholder="https://www.extrape.com/link-converter">
+          <small>Built in: <code>https://www.extrape.com/link-converter</code>. Leave it as is. If the address here stops working, the extension automatically uses the built-in one, so links don't break. Stay logged in to ExtraPe in this Chrome profile.</small>
         </label>
+        <div class="btn-row"><button type="button" id="resetExtrape">Use built-in address</button><button type="button" id="openExtrape">Open ExtraPe converter</button></div>
         <details>
           <summary>Advanced: page selectors (only if auto-detect fails)</summary>
           <label>Input box CSS selector <input id="extrapeInputSelector" placeholder="auto"></label>
@@ -107,9 +114,18 @@
     </section>
 
     <section>
-      <h2>5. Advanced: per-store link templates</h2>
-      <p class="help">Optional. Overrides the converter for a store. JSON map of store id → template. Store ids: amazon, flipkart, myntra, ajio, meesho, shopsy, nykaa, tatacliq, snapdeal, jiomart, croma, reliancedigital, firstcry, purplle, bewakoof, lenskart, pepperfry, mamaearth, boat, other.</p>
-      <textarea id="storeTemplates" rows="4" placeholder='{"flipkart": "{{url}}&affid=yourid"}'></textarea>
+      <h2>5. Conversion per store</h2>
+      <p class="help">Choose how each store's links are converted. <b>Auto</b> = Amazon → your tag + SiteStripe, every other store → ExtraPe. When you get your own affiliate program (for example Flipkart Affiliate), switch that store to <b>My link pattern</b> (e.g. <code>{{url}}&amp;affid=yourid</code>) or <b>My converter page</b> (the page where you paste a link and press Convert, like ExtraPe). <b>Other shops</b> covers every store not listed.</p>
+      <table class="routes">
+        <thead><tr><th>Store</th><th>Convert with</th><th>Link pattern / converter page URL</th></tr></thead>
+        <tbody id="routesBody"></tbody>
+      </table>
+      <input type="hidden" id="storeRoutes">
+      <details>
+        <summary>Older setting: per-store templates (JSON)</summary>
+        <p class="help">Still works, but the table above wins when a store is set there.</p>
+        <textarea id="storeTemplates" rows="3" placeholder='{"flipkart": "{{url}}&affid=yourid"}'></textarea>
+      </details>
     </section>
 
     <section>
@@ -123,6 +139,7 @@
       <button type="button" id="save" class="primary">Save settings</button>
     </div>
   </main>
+  <script src="common/stores.js"></script>
   <script src="common/settings.js"></script>
   <script src="options.js"></script>
 </body>

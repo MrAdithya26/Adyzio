@@ -32,18 +32,29 @@ function renderState(state) {
   if (job) {
     const when = new Date(job.createdAt).toLocaleString('en-IN');
     $('jobInfo').textContent = `${job.count} product(s) from ${job.store} · scraped ${when}` + (job.convertedAt ? ' · links converted ✓' : '');
-    $('convertJobBtn').textContent = `Convert ${job.count} scraped link(s)`;
+    const pending = job.count - (job.converted || 0);
+    $('convertJobBtn').textContent = job.converted && pending > 0
+      ? `Convert remaining ${pending} link(s)`
+      : `Convert ${job.count} scraped link(s)`;
+    if (job.converted && pending > 0) $('jobInfo').textContent += ` · ${job.converted} converted, ${pending} left`;
   }
   $('convertJobBtn').disabled = !job || busy;
   $('redownloadBtn').disabled = !job || busy;
   $('scrapeBtn').disabled = !!busy || !pageScrapable;
+  $('queueBtn').disabled = !!busy;
+  $('wishlinkExport').disabled = !!busy;
+  $('wishlinkExportAff').disabled = !!busy;
 
   if (!status) return;
   const card = $('statusCard');
   card.classList.remove('hidden');
   const line = $('statusText');
   line.textContent = status.phase || '';
-  line.parentElement.className = 'status-line' + (status.state === 'done' ? ' ok' : status.state === 'error' ? ' err' : '');
+  line.parentElement.className = 'status-line' + (status.state === 'done' ? ' ok' : status.state === 'error' ? ' err' : status.state === 'stopped' ? ' stopped' : '');
+  const stopBtn = $('stopBtn');
+  const running = status.state === 'running' && busy;
+  stopBtn.classList.toggle('hidden', !running);
+  if (running && !/^Stopping/.test(status.phase || '')) { stopBtn.disabled = false; stopBtn.textContent = "■ Stop & download what's done"; }
   const prog = $('progress');
   if (status.state === 'running') {
     prog.classList.remove('hidden');
@@ -57,7 +68,7 @@ function renderState(state) {
   (status.warnings || []).forEach((x) => w.append(el('li', null, x)));
   const links = $('statusLinks');
   links.innerHTML = '';
-  if (status.state === 'done' && status.links) {
+  if ((status.state === 'done' || status.state === 'stopped') && status.links) {
     const add = (href, label) => { const a = el('a', null, label); a.href = href; a.target = '_blank'; links.append(a); };
     if (status.links.driveLink) add(status.links.driveLink, '📄 Open Excel in Google Drive');
     if (status.links.imagesFolder) add(status.links.imagesFolder, '🖼 Open product images folder');
@@ -141,7 +152,50 @@ async function init() {
     setTimeout(refresh, 300);
   };
 
+  // Wishlink profiles: prefill with the open profile, remember what was typed.
+  const { wishlinkProfiles = '' } = await chrome.storage.local.get('wishlinkProfiles');
+  const onWishlinkProfile = store.id === 'wishlink' && !/\/share\//i.test(url);
+  $('wishlinkIn').value = wishlinkProfiles || (onWishlinkProfile ? url : '');
+  if (onWishlinkProfile && wishlinkProfiles && !wishlinkProfiles.includes(url.split('?')[0])) {
+    $('wishlinkIn').value = `${url.split('?')[0]}\n${wishlinkProfiles}`;
+  }
+  if (onWishlinkProfile) $('wishlinkCard').parentNode.insertBefore($('wishlinkCard'), $('setupWarn').nextSibling);
+  $('wishlinkIn').oninput = () => chrome.storage.local.set({ wishlinkProfiles: $('wishlinkIn').value });
+  const startWishlink = async (withAffiliate) => {
+    const profiles = $('wishlinkIn').value.split(/[\s,]+/).map((x) => x.trim()).filter(Boolean);
+    if (!profiles.length) { $('wishlinkIn').focus(); return; }
+    chrome.storage.local.set({ wishlinkProfiles: $('wishlinkIn').value });
+    $('wishlinkExport').disabled = true;
+    $('wishlinkExportAff').disabled = true;
+    await send({ type: 'wishlinkExport', profiles, withAffiliate });
+    setTimeout(refresh, 300);
+  };
+  $('wishlinkExport').onclick = () => startWishlink(false);
+  $('wishlinkExportAff').onclick = () => startWishlink(true);
+
   $('redownloadBtn').onclick = () => send({ type: 'redownload' });
+  $('stopBtn').onclick = async () => {
+    $('stopBtn').disabled = true;
+    $('stopBtn').textContent = 'Stopping…';
+    await send({ type: 'stopJob' });
+    setTimeout(refresh, 300);
+  };
+  $('openDash').onclick = () => {
+    if (!settings.scriptUrl) return chrome.runtime.openOptionsPage();
+    chrome.tabs.create({ url: settings.scriptUrl.trim() });
+  };
+  $('queueBtn').onclick = async () => {
+    $('queueBtn').disabled = true;
+    await send({ type: 'processQueue' });
+    setTimeout(refresh, 300);
+  };
+  send({ type: 'queueInfo' }).then((q) => {
+    if (!q || !q.ready) return;
+    $('queueRow').classList.remove('hidden');
+    $('queueText').textContent = q.count ? `📱 Phone queue: ${q.count} link(s) waiting` : '📱 Phone queue is empty';
+    $('queueBtn').textContent = q.count ? 'Process' : 'Check again';
+  }).catch(() => {});
+  $('openExtrapeBtn').onclick = () => chrome.tabs.create({ url: settings.extrapeConverterUrl || DealSettings.BUILT_IN_EXTRAPE_URL });
   $('uploadFileBtn').onclick = () => chrome.tabs.create({ url: chrome.runtime.getURL('convert-file.html') });
 
   $('bulkBtn').onclick = async () => {

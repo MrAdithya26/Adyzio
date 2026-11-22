@@ -7,7 +7,7 @@
 <body>
   <header>
     <div class="brand"><img src="icons/icon48.png" alt=""><span>Deal Scraper &amp; Affiliate</span></div>
-    <button id="openSettings" class="icon-btn" title="Settings">⚙</button>
+    <div><button id="openDash" class="icon-btn" title="Open the Adyzio dashboard">📊</button><button id="openSettings" class="icon-btn" title="Settings">⚙</button></div>
   </header>
 
   <div id="setupWarn" class="warn hidden"></div>
@@ -48,10 +48,23 @@
     <button class="btn primary" id="scrapeBtn">Scrape this page</button>
   </section>
 
+  <!-- Wishlink creator profiles -->
+  <section class="card" id="wishlinkCard">
+    <h2><span class="num">W</span> Wishlink profile → Excel</h2>
+    <p class="muted">Paste one or more Wishlink profile links (one per line). Every product in the profile is exported in the deals template, with the real store link (Nykaa, Myntra, Amazon…) in <b>Product Link</b> and the Wishlink link in <b>Source Page</b>. One Excel per profile.</p>
+    <textarea id="wishlinkIn" rows="3" placeholder="https://www.wishlink.com/username&#10;https://www.wishlink.com/another"></textarea>
+    <div class="row">
+      <button class="btn" id="wishlinkExport">Export to Excel</button>
+      <button class="btn primary" id="wishlinkExportAff">Export with affiliate links</button>
+    </div>
+    <p class="muted small" style="margin:6px 0 0">“Export with affiliate links” converts every product link with your Amazon tag / ExtraPe and downloads the <code>_affiliate.xlsx</code>.</p>
+  </section>
+
   <!-- Progress / result -->
   <section class="card hidden" id="statusCard">
     <div class="status-line"><span id="statusText"></span></div>
     <div class="progress hidden" id="progress"><div id="progressBar"></div></div>
+    <button class="btn stop hidden" id="stopBtn" title="Stop now and download everything done so far">■ Stop &amp; download what's done</button>
     <ul class="warnings" id="warnings"></ul>
     <div class="links" id="statusLinks"></div>
   </section>
@@ -65,6 +78,11 @@
       <button class="btn primary" id="convertJobBtn" disabled>Convert scraped links</button>
       <button class="btn" id="redownloadBtn" disabled title="Download the Excel again">⬇ Excel</button>
     </div>
+    <div class="queue-row hidden" id="queueRow">
+      <span id="queueText">📱 Phone queue</span>
+      <button class="btn" id="queueBtn">Process</button>
+    </div>
+    <button class="btn" id="openExtrapeBtn" style="margin-top:8px" title="Opens ExtraPe's link converter (you must be logged in)">↗ Open ExtraPe link converter</button>
     <button class="btn" id="uploadFileBtn" style="margin-top:8px">📁 Upload your Excel / CSV of links → fill affiliate links</button>
   </section>
 

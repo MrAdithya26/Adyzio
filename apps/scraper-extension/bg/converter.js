@@ -14,7 +14,7 @@
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   function newContext() {
-    return { createdTabs: [], amazonTabs: {}, extrapeTab: null };
+    return { createdTabs: [], amazonTabs: {}, pageTabs: {}, extrapeFallback: false };
   }
 
   async function closeContext(ctx) {
@@ -118,28 +118,50 @@
     throw new Error('SiteStripe short link failed. Log in to Amazon Associates in Chrome and make sure SiteStripe is on.');
   }
 
-  // ---------------- ExtraPe ----------------
-  async function extrapeWeb(url, settings, ctx) {
-    if (!ctx.extrapeTab) {
-      ctx.extrapeTab = await openBackgroundTab(ctx, settings.extrapeConverterUrl || 'https://www.extrape.com/');
+  // ---------------- Converter pages (ExtraPe or your own affiliate network) ----------------
+  // Opens the converter page once per job in a background tab, pastes the link, presses Convert and reads the result.
+  async function converterPage(url, pageUrl, sel, settings, ctx) {
+    ctx.pageTabs = ctx.pageTabs || {};
+    if (!ctx.pageTabs[pageUrl]) {
+      ctx.pageTabs[pageUrl] = await openBackgroundTab(ctx, pageUrl);
       await sleep(2500); // let the web app render
     }
+    const tabId = ctx.pageTabs[pageUrl];
     // Re-inject every time: the page may have reloaded. The script ignores repeat injections.
-    await chrome.scripting.executeScript({ target: { tabId: ctx.extrapeTab }, files: ['content/extrape_bridge.js'] });
+    await chrome.scripting.executeScript({ target: { tabId }, files: ['content/extrape_bridge.js'] });
     const cfg = {
-      input: settings.extrapeInputSelector,
-      button: settings.extrapeButtonSelector,
-      output: settings.extrapeOutputSelector,
+      input: sel.input || '',
+      button: sel.button || '',
+      output: sel.output || '',
       timeoutMs: (Number(settings.extrapeTimeoutSec) || 25) * 1000,
     };
     const [res] = await chrome.scripting.executeScript({
-      target: { tabId: ctx.extrapeTab },
+      target: { tabId },
       func: (u, c) => window.__extrapeConvert(u, c),
       args: [url, cfg],
     });
     const r = res && res.result;
-    if (!r || !r.ok) throw new Error((r && r.error) || 'ExtraPe conversion failed');
+    if (!r || !r.ok) {
+      const err = new Error((r && r.error) || 'Converter page did not return a link');
+      err.noLinkBox = !!(r && r.noLinkBox);
+      throw err;
+    }
     return r.link;
+  }
+
+  async function extrapeWeb(url, settings, ctx) {
+    const builtIn = DealSettings.BUILT_IN_EXTRAPE_URL;
+    const configured = (settings.extrapeConverterUrl || '').trim() || builtIn;
+    const sel = { input: settings.extrapeInputSelector, button: settings.extrapeButtonSelector, output: settings.extrapeOutputSelector };
+    // After one failure on your saved address, the rest of the job goes straight to the built-in page.
+    const pageUrl = ctx.extrapeFallback ? builtIn : configured;
+    try {
+      return await converterPage(url, pageUrl, ctx.extrapeFallback ? {} : sel, settings, ctx);
+    } catch (e) {
+      if (!e.noLinkBox || pageUrl === builtIn) throw e;
+      ctx.extrapeFallback = true; // saved address is outdated: use the built-in ExtraPe converter
+      return converterPage(url, builtIn, {}, settings, ctx);
+    }
   }
 
   async function extrapeApi(url, settings) {
@@ -169,46 +191,75 @@
   }
 
   // ---------------- Main ----------------
+  function routeFor(storeId, settings) {
+    const routes = DealSettings.parseRoutes(settings);
+    const r = routes[storeId]; // unknown shops use the "other" row (detectStore id 'other')
+    if (r && r.method && r.method !== 'auto') return r;
+    // Older "per-store templates" setting.
+    let templates = {};
+    try { templates = JSON.parse(settings.storeTemplates || '{}'); } catch (e) { /* ignore bad JSON */ }
+    if (templates[storeId]) return { method: 'template', value: templates[storeId] };
+    return { method: storeId === 'amazon' ? 'amazon' : 'extrape' };
+  }
+
   async function convertOne(url, settings, ctx) {
     const original = String(url || '').trim();
     if (!/^https?:\/\//i.test(original)) return { original, affiliate: '', method: '', error: 'Not a link' };
     const expanded = await expand(original);
     const store = S.detectStore(expanded);
     const clean = S.cleanProductUrl(expanded);
+    const route = routeFor(store.id, settings);
+    const base = { original, clean, store: store.name };
 
-    let templates = {};
-    try { templates = JSON.parse(settings.storeTemplates || '{}'); } catch (e) { /* ignore bad JSON */ }
-    if (templates[store.id]) {
-      const link = templates[store.id].replace(/\{\{url\}\}/g, clean).replace(/\{\{url_enc\}\}/g, encodeURIComponent(clean));
-      return { original, clean, store: store.name, affiliate: link, method: 'Template' };
+    if (route.method === 'none') return { ...base, affiliate: clean, method: 'Not converted (setting)' };
+
+    if (route.method === 'template') {
+      if (!route.value) return { ...base, affiliate: '', method: 'Template', error: `No template set for ${store.name}` };
+      const link = String(route.value).replace(/\{\{url\}\}/g, clean).replace(/\{\{url_enc\}\}/g, encodeURIComponent(clean));
+      return { ...base, affiliate: link, method: 'Template' };
     }
 
-    if (store.id === 'amazon') {
+    if (route.method === 'amazon' && store.id === 'amazon') {
       const long = amazonLongLink(expanded, settings.amazonTag);
       if (!settings.amazonUseSiteStripe) {
-        return { original, clean, store: store.name, affiliate: long, method: settings.amazonTag ? 'Amazon tag' : 'No tag set' };
+        return { ...base, affiliate: long, method: settings.amazonTag ? 'Amazon tag' : 'No tag set' };
       }
       try {
         const short = await siteStripeShort(long, ctx);
-        return { original, clean, store: store.name, affiliate: short, method: 'SiteStripe' };
+        return { ...base, affiliate: short, method: 'SiteStripe' };
       } catch (e) {
-        return { original, clean, store: store.name, affiliate: long, method: settings.amazonTag ? 'Amazon tag' : 'No tag set', error: e.message };
+        return { ...base, affiliate: long, method: settings.amazonTag ? 'Amazon tag' : 'No tag set', error: e.message };
       }
     }
 
+    if (route.method === 'page') {
+      if (!route.value) return { ...base, affiliate: '', method: 'Converter page', error: `No converter page set for ${store.name}` };
+      try {
+        const link = await converterPage(clean, route.value, { input: route.input, button: route.button, output: route.output }, settings, ctx);
+        return { ...base, affiliate: link, method: 'Converter page' };
+      } catch (e) {
+        return { ...base, affiliate: '', method: 'Converter page', error: e.message };
+      }
+    }
+
+    // ExtraPe (website or API).
+    const useApi = route.method === 'api' || (route.method !== 'extrape' && settings.extrapeMode === 'api');
     try {
-      const link = settings.extrapeMode === 'api' ? await extrapeApi(clean, settings) : await extrapeWeb(clean, settings, ctx);
-      return { original, clean, store: store.name, affiliate: link, method: 'ExtraPe' };
+      const link = useApi ? await extrapeApi(clean, settings) : await extrapeWeb(clean, settings, ctx);
+      const note = !useApi && ctx.extrapeFallback ? 'Used the built-in ExtraPe converter (the address in Settings did not work)' : undefined;
+      return { ...base, affiliate: link, method: useApi ? 'ExtraPe API' : 'ExtraPe', ...(note ? { note } : {}) };
     } catch (e) {
-      return { original, clean, store: store.name, affiliate: '', method: 'ExtraPe', error: e.message };
+      return { ...base, affiliate: '', method: 'ExtraPe', error: e.message };
     }
   }
 
-  async function convertMany(urls, settings, onProgress) {
+  // shouldStop(): return true to stop early. Returns the results so far (may be shorter than urls).
+  async function convertMany(urls, settings, onProgress, shouldStop) {
     const ctx = newContext();
     const out = [];
     try {
       for (let i = 0; i < urls.length; i++) {
+        if (shouldStop && shouldStop()) break;
         out.push(await convertOne(urls[i], settings, ctx));
         if (onProgress) await onProgress(i + 1, urls.length, out[i]);
       }
@@ -227,5 +278,5 @@
     return { text: out, results };
   }
 
-  g.DealConverter = { convertOne, convertMany, convertText, newContext, closeContext };
+  g.DealConverter = { convertOne, convertMany, convertText, newContext, closeContext, routeFor };
 })(self);

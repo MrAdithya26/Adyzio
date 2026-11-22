@@ -11,6 +11,7 @@ Scrape products from Amazon, Flipkart, Myntra, Ajio, Meesho, Shopsy, Nykaa, Tata
 | **Popup → Option 1: Scrape page** | Reads every product on the page (search/category/listing or a single product page), auto-scrolls to load more, saves images to Drive, adds rows to your Google Sheet, downloads Excel |
 | **Popup → Option 2: Convert links** | Converts every scraped product link to an affiliate link and fills the **Affiliate Link** column in your Google Sheet (matched by Product Link) |
 | **Popup → Upload your Excel / CSV of links** | Opens a page where you drop your own .xlsx/.xls/.csv. It finds the product-link column and converts every link. By default the output file is in the **deals template** format: your columns are matched by name (Title/Name → Product Title, Price, MRP, Image, Category…), and Store and Sr No are filled in. Choose "Keep my file's own columns" to write into your original layout instead. Rows that already have an affiliate link are skipped. Download the filled file, or also save it to your Drive Excel folder |
+| **Popup → W: Wishlink profile → Excel** | Paste one or more Wishlink profile links (`https://www.wishlink.com/username`, one per line). **Export to Excel** reads *every* product in the profile through Wishlink's storefront API (not only what is on screen), follows each Wishlink link to the real store page, and writes one Excel per profile in the deals template. **Export with affiliate links** does the same and then converts every product link (Amazon → SiteStripe, others → ExtraPe) and downloads `..._affiliate.xlsx`. "Scrape this page" on an open Wishlink profile also works. |
 | **Popup → Paste links or deal text** | Paste a WhatsApp/Telegram deal message; every link in it is replaced by its affiliate link |
 | **Right-click menu** | "Convert link to affiliate link" on any link, "Convert this page", "Scrape products on this page" |
 
@@ -51,6 +52,82 @@ You only edit links in the extension. To change folder or sheet later, just past
 - Description comes from product pages.
 - Deal Type, Good For, Check List and Ends come from the popup's **Deal details for this scrape** box, and apply to every row of that scrape.
 
+## Dashboard web app (PC + phone) and Adyzio
+
+The same Apps Script also serves a dashboard. Everything lives in your Google Sheet:
+
+| Tab | What it holds |
+|---|---|
+| your products tab | Every product, **one row per product** (re-scraping updates the row, never duplicates it). Extra columns: Product ID, Status, Viral, Clicks, Published On, Job ID, Updated At. |
+| **Live** | Only products with Status = Live, newest first. **Point the Adyzio website plugin at this tab.** |
+| **Queue** | Links you add from the dashboard / phone for the extension to scrape. |
+| **Job Log** | Every scrape, conversion and Excel export (shown under Activity). |
+
+**Status** of a product: `Scraped` → `Converted` (has your affiliate link) → `Live` (on adyzio.com). Also `Convert failed` and `Not placed` (you decided not to publish it). Re-scraping never changes Status, Viral, Clicks or Published On.
+
+### One sheet for everything: "Adyzio Deals Hub"
+
+Your Drive has a Google Sheet named **Adyzio Deals Hub** that both sides use:
+
+| Tab | Used by |
+|---|---|
+| Deals | Chrome extension + dashboard (every product) |
+| Link Sheet | adyzio.com plugin (filled automatically from Live products) |
+| Categories | adyzio.com plugin + category matching |
+| Category Map | you: map scraped categories to Adyzio slugs |
+| Live, Queue, Job Log | dashboard |
+
+- Extension Settings → Google Sheet link = this sheet, tab name `Deals`.
+- Website plugin → this sheet, tab `Link Sheet` (same columns as before).
+- Because the Link Sheet tab is in the same spreadsheet, nothing needs to be entered under "Adyzio Link Sheet link" on the dashboard; the sync finds it by itself.
+
+### Set up (10 minutes, once)
+
+1. Settings → section 1: **Copy script (Code.gs)** → paste into Code.gs at script.google.com. Then **+ → HTML**, name it `Dashboard`, **Copy dashboard (Dashboard.html)** → paste. Save.
+   - Already had the old script? Paste both, then **Deploy → Manage deployments → ✎ → Version: New version → Deploy** (URL stays the same).
+2. Deploy as Web app (Execute as: Me, Who has access: Anyone) and paste the `/exec` URL into Settings.
+3. **Open that URL in your browser.** That is your dashboard. The first time it asks you to choose an **access key** (at least 6 characters). Do this right after deploying.
+4. Enter the same key in Settings → **Access key**, press **Save & test links**. It should say Connected ✓ and create the Queue / Job Log / Live tabs.
+5. On your phone, open the same URL, enter the key, then browser menu → **Add to Home screen**. It now opens like an app.
+6. Dashboard → ⚙ Settings → **Adyzio Link Sheet link**: paste your *Adyzio Link Sheet* (tab `Link Sheet`). From then on every product you mark **Live** is written into it automatically (see below), and the adyzio.com plugin picks it up at its next refresh.
+
+### Adyzio Link Sheet mapping
+
+| Adyzio column | Filled from |
+|---|---|
+| status | `READY`, `READY_CHECK` or `ERROR`, the same checks as `adyzio_links.py validate`; the reason is in `notes` |
+| source_url | Product Link (clean store link) |
+| store | amazon, flipkart, myntra, meesho, ajio, nykaa, tatacliq, croma, shopsy, jiomart, decathlon, pepperfry, snapdeal, firstcry, lenskart, boat, or `other` |
+| affiliate_url | Affiliate Link |
+| title, brand, description | Product Title (max 255), Brand, Description |
+| category | a slug from your **Categories** tab: exact name/slug match first, then your **Category Map** tab, then a keyword guess (marked READY_CHECK). Unmatched ones are listed in the master sheet's **Category Map** tab: fill column B once (name or slug) and they are remembered |
+| price, mrp, price_checked_on, image | from the scrape, with the scrape date. **Empty for Amazon** (your Amazon rule: prices/images only from Amazon's API; the site shows "Check latest price") |
+| is_deal / is_featured / is_active | 1 if a deal type or discount / 1 if ★ Viral / 1 while Live, **0 when you take it off Live** (rows are never deleted) |
+| deal_type, deal_ends, added_on | Deal Type, Ends, Published On |
+| notes | `[DS:<Product ID>]` marker + issues |
+
+Rows you typed in the Adyzio sheet yourself are never changed: if a Live product's `source_url` is already there without the `[DS:…]` marker, it is skipped. `posted_channels`, `gallery`, `video_url`, `features` and `short_desc` are yours to edit there; the sync never overwrites them. The dashboard's **adyzio.com sync** card shows the last sync and has **Sync now**.
+
+### Dashboard
+
+- **Overview**: products, converted links, live on adyzio.com, not placed yet, viral deals, waiting conversion, failed, phone queue; pipeline and last-14-days chart.
+- **Platforms**: a card per store (Flipkart, Myntra, Amazon, Meesho, Nykaa…) with Live / Not placed / Viral / Failed.
+- **Categories**: number of categories, subcategories and child categories, and the full tree with counts.
+- **Products**: search and filter; select products → **Mark Live**, **Not placed**, **★ Viral**; copy affiliate links; **Export** the filtered list (CSV, opens in Excel).
+- **Add links**: paste links (or import a CSV/TXT) from your phone; choose whether to convert them too.
+- **Activity**: every import/export job.
+- **⚙ Settings**: when a deal counts as viral (marked ★, or discount ≥ 60%, clicks ≥ 100, or deal type loot/lightning; all changeable), theme, change key.
+
+### Phone queue
+
+Links added on the dashboard wait in the Queue tab. In the extension popup press **📱 Process** (Option 2 card), or tick Settings → *Process links added on the dashboard / phone automatically* to check every 15 minutes while Chrome is open. Each link is opened in a background tab, scraped like "Scrape this page" (Wishlink profiles via the API), saved to the sheet and, if chosen, converted. Stop works here too.
+
+Why the PC is still needed: ExtraPe and Amazon SiteStripe only work inside your logged-in Chrome. Google's servers can't log in to them for you.
+
+### Security
+
+The web app URL is public by design (so the extension and your phone can reach it), so keep the **access key** private. Without it, nobody can read the dashboard or write to your sheet. If you deployed before choosing a key, open the dashboard and choose one straight away.
+
 ## Setup 2: Amazon (SiteStripe)
 
 1. Enter your Associates tracking ID (e.g. `yourtag-21`) in Settings.
@@ -59,17 +136,22 @@ You only edit links in the extension. To change folder or sheet later, just past
 
 ## Setup 3: ExtraPe (Flipkart, Myntra, Ajio, Meesho and all other stores)
 
-ExtraPe has no public API, so by default the extension uses **your ExtraPe login** and drives ExtraPe's own link-converter page in a background tab:
+ExtraPe has no public API, so the extension uses **your ExtraPe login** and drives ExtraPe's link-converter page in a background tab.
 
-1. Log in to ExtraPe in Chrome.
-2. Open ExtraPe's link-converter page (where you paste a product link to get your earning link) and copy its address into Settings → *ExtraPe link-converter page URL*.
+1. Log in to ExtraPe in Chrome (popup → **Open ExtraPe link converter**).
+2. Nothing else to set: `https://www.extrape.com/link-converter` is built in. If the address in Settings is blank, old, or stops working, the built-in page is used automatically and the Conversion column says so.
 3. Use **Test a link** at the bottom of Settings with a Flipkart link.
 
 If auto-detection can't find the box or button, open *Advanced: page selectors* and enter CSS selectors (right-click the element → Inspect → Copy selector).
 
 **API mode (faster, optional):** on the ExtraPe converter, open DevTools (F12) → Network, convert a link, find the request that returns the converted link, and copy its URL, headers and body into Settings → *Custom API endpoint*, using `{{url}}` where the product link goes.
 
-**Per-store templates (optional):** for stores where you have your own affiliate ID, add e.g. `{"flipkart": "{{url}}&affid=yourid"}`; that store then skips ExtraPe.
+**Conversion per store (Settings → 5):** choose how each store's links are converted:
+- **Auto**: Amazon → your tag + SiteStripe, every other store → ExtraPe.
+- **My link pattern**: your own affiliate ID, e.g. Flipkart Affiliate `{{url}}&affid=yourid` (`{{url_enc}}` = encoded link).
+- **My converter page**: your own affiliate network's page where you paste a link and press Convert (works like ExtraPe).
+- **ExtraPe**, **Amazon tag + SiteStripe**, **Custom API**, or **Don't convert** (keeps the clean store link).
+- **Other shops** covers every store that is not listed.
 
 ## Daily use
 
@@ -79,6 +161,22 @@ If auto-detection can't find the box or button, open *Advanced: page selectors* 
 4. Popup → **Convert N scraped link(s)**. The Affiliate Link column in the sheet is filled in, and `..._affiliate.xlsx` is downloaded.
 
 You can close the popup during a job; it keeps running and the icon badge shows progress.
+
+**Stop:** every running job (page scrape, Wishlink export, conversion, uploaded-file conversion) shows **■ Stop & download what's done**. The current link finishes, then:
+- Scraping / Wishlink reading → Excel with the products read so far (`..._partial.xlsx`).
+- Conversion → Excel with only the rows converted so far (`..._affiliate_partial.xlsx`); their Google Sheet rows are filled too.
+- Uploaded file → the file with the links converted so far downloads automatically.
+
+**Resume:** after a stopped conversion, Option 2 shows **Convert remaining N link(s)**. It converts only rows still missing an affiliate link (and retries failed ones), then downloads the complete `_affiliate.xlsx`.
+
+## Wishlink profiles
+
+- **Product Link** = the store's own product link (Nykaa, Myntra, Amazon, Zara, Tira…) with the creator's Wishlink tracking removed (their `tag=wishlink_…`, `affiliate_id`, `atgSessionId`, AppsFlyer parameters), so conversion uses *your* affiliate IDs.
+- **Source Page** = the product's Wishlink link. **Store** = the store the link leads to.
+- Price, MRP, Discount %, Rating, Subcategory, Description and Image come from Wishlink. Coupons and out-of-stock notes are added to Description.
+- If a Wishlink link does not lead to a store, the row keeps the Wishlink link and Description says so.
+- Stores ExtraPe doesn't support (e.g. Zara, H&M) will show the ExtraPe error in the Conversion column.
+- Pasting a single Wishlink product link (`wishlink.com/share/…`) into "Paste links or deal text" converts it to your affiliate link too.
 
 ## Notes and limits
 
@@ -95,9 +193,11 @@ You can close the popup during a job; it keeps running and the icon badge shows 
 manifest.json            extension definition (Manifest V3)
 background.js            jobs: scrape → images → Excel → Drive; convert → update Excel/Sheet; right-click menu
 bg/gdrive.js             sends images/rows to your Apps Script web app
-apps-script/Code.gs      the script you paste into script.google.com
+apps-script/Code.gs      the script you paste into script.google.com (bridge + dashboard data)
+apps-script/Dashboard.html  the dashboard web app (paste as HTML file "Dashboard")
 bg/excel.js              Excel layout (SheetJS)
 bg/converter.js          Amazon SiteStripe + ExtraPe + templates
+bg/wishlink.js           Wishlink profile export (API + store-link resolving)
 common/stores.js         store detection, link cleaning, image upscaling
 common/settings.js       default settings
 content/scraper.js       page scraper (listing + product pages)

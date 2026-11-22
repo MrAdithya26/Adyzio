@@ -1,6 +1,6 @@
 # Project status
 
-**Updated:** 2026-11-22 · **Project version:** 0.5.0
+**Updated:** 2026-11-22 · **Project version:** 0.6.0
 
 ## Where things stand
 
@@ -11,13 +11,14 @@
 | Link tools | Link tool and deal collector in `apps/link-tools/` (tests pass) |
 | Deals design | Deals page v2 prototype in `website/deals-v2/` |
 | Master sheet | Google Sheet "Adyzio Deals Hub" (Drive › 04 Adyzio › data). Empty so far |
-| Scraper extension | 1.3.0 in `apps/scraper-extension/`; 1.7.0 with Wishlink profile scraping not found yet |
+| Scraper extension | **1.7.0** in `apps/scraper-extension/` (Wishlink profiles, dashboard, Live tab, phone queue) |
 | Social | Platform descriptions written (31 Oct); Telegram bot plan agreed |
 
 ## Open items
 
 - [x] Adyzio Core 1.6.0 code added to GitHub (22 Nov).
-- [ ] Find extension 1.7.0 (Wishlink profile scraping) and add it to `apps/scraper-extension/`.
+- [x] Extension 1.7.0 found and saved (22 Nov).
+- [ ] Adyzio Core 1.7.0: use only the 726 categories (never create new ones), map store categories, hide Amazon prices/images from the sheet, read the Live tab.
 - [ ] Deals Hub: add the 726-category list as a new tab (old 20-category tab stays).
 - [ ] Build Adyzio Core 1.7.0 ("Clean up categories") and the Storefront / Import & Sync split — Day 1 of the 7-day plan.
 - [ ] Finish ThirstyAffiliates setup (wizard showed an error; retry was planned for 4 Nov).
