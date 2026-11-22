@@ -4,6 +4,7 @@ Important decisions about Adyzio, newest first. Each one says what was decided a
 
 | Date | Decision | Why | Source |
 |---|---|---|---|
+| 2026-11-22 | **Adyzio Deals Hub** is the one master product sheet: the extension writes to it, the plugin reads it every 15 minutes. Adyzio Link Sheet stays as history. Categories are picked automatically from the 726-category list. | Deals Hub already has the exact columns the plugin 1.6 importer reads, plus Queue, Job Log and Live tabs for the extension. One sheet means one truth. | [chat note](chat-log/2026-11-22_scraper-extension-and-sheet.md) |
 | 2026-11-04 | GitHub is the master copy; your computer (`D:\ABD Innovations\Adyzio`) and Google Drive hold matching copies. Versions follow MAJOR.MINOR.PATCH with tags and a CHANGELOG. | One place with full history; copies for offline use and easy reading. | [chat note](chat-log/2026-11-04_project-organisation.md) |
 | 2026-11-04 | The website is split into parts: Kadence theme + Adyzio Core, Storefront, Import & Sync, SEO, Legal, Social plugins, each with its own version. Next: Adyzio Core 1.7.0 with "Clean up categories". | A fix to one part never touches the others. | [chat note](chat-log/2026-11-02_adyzio-website-launch-plan.md) |
 | 2026-11-03 | Adyzio uses the full 726-category list (20 main › sub › child). The importer never creates new main categories. | Stops duplicate categories such as "Fashion" vs "Fashion - Men". | [chat note](chat-log/2026-11-02_adyzio-website-launch-plan.md) |

@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Deal Scraper Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <h1>Deal Scraper &amp; Affiliate – Settings</h1>
+
+    <section>
+      <h2>1. Google Drive &amp; Google Sheet (no sign-in)</h2>
+      <p class="help">Google does not let any app upload to Drive with only a shared link. So you add a small script to <b>your own</b> Google account once. It saves the images and writes the sheet rows for the extension.</p>
+      <ol class="steps">
+        <li>Open <a href="https://script.google.com/home/projects/create" target="_blank">script.google.com → New project</a>.</li>
+        <li>Delete what is there, paste the script below (<b>Copy script</b>), press <b>Save</b>.</li>
+        <li><b>Deploy → New deployment</b> → gear icon → <b>Web app</b>. Execute as: <b>Me</b>. Who has access: <b>Anyone</b>. Deploy, then <b>Authorize access</b> and allow.</li>
+        <li>Copy the <b>Web app URL</b> (ends in <code>/exec</code>) into the box below.</li>
+      </ol>
+      <div class="btn-row"><button type="button" id="copyScript">Copy script</button><button type="button" id="toggleScript">Show script</button></div>
+      <textarea id="scriptCode" rows="12" readonly class="hidden"></textarea>
+
+      <label>Apps Script Web app URL
+        <input id="scriptUrl" placeholder="https://script.google.com/macros/s/…/exec">
+      </label>
+      <label>"product images" folder link
+        <input id="imagesFolderLink" placeholder="https://drive.google.com/drive/folders/…">
+        <small>Each image is saved with the product title as its file name (e.g. "Test Phone 1 128GB.jpg").</small>
+      </label>
+      <label>Google Sheet link
+        <input id="sheetLink" placeholder="https://docs.google.com/spreadsheets/d/…">
+        <small>Rows are added in the deals-template columns. The Drive Image Link column points to the matching image.</small>
+      </label>
+      <label>Sheet tab name (optional)
+        <input id="sheetTab" placeholder="Blank = first tab">
+      </label>
+      <label>Excel folder link (optional)
+        <input id="excelFolderLink" placeholder="Also save each Excel file in this Drive folder">
+      </label>
+      <div class="checks">
+        <label><input type="checkbox" id="uploadImages"> Save product images to the Drive folder</label>
+        <label><input type="checkbox" id="downloadExcelLocally"> Also download the Excel file to this computer</label>
+      </div>
+      <div class="btn-row">
+        <button type="button" id="testDrive" class="primary">Save &amp; test links</button>
+      </div>
+      <div id="driveResult" class="result"></div>
+    </section>
+
+    <section>
+      <h2>2. Scraping</h2>
+      <div class="checks">
+        <label><input type="checkbox" id="autoScroll"> Auto-scroll listing pages to load more products</label>
+        <label><input type="checkbox" id="highResImages"> Use high-resolution images</label>
+        <label><input type="checkbox" id="floatingButton"> Show the floating "₹ Affiliate" button on store pages</label>
+      </div>
+      <label>Max scroll steps
+        <input id="maxScrolls" type="number" min="1" max="200">
+      </label>
+    </section>
+
+    <section>
+      <h2>3. Amazon (SiteStripe)</h2>
+      <label>Amazon Associates tracking ID (tag)
+        <input id="amazonTag" placeholder="yourtag-21">
+      </label>
+      <div class="checks">
+        <label><input type="checkbox" id="amazonUseSiteStripe"> Shorten to amzn.to via SiteStripe</label>
+      </div>
+      <p class="help">Stay logged in to your Amazon Associates account in this Chrome profile, with SiteStripe turned on. If shortening fails, the long link with your tag is used.</p>
+    </section>
+
+    <section>
+      <h2>4. ExtraPe (Flipkart, Myntra, Ajio, Meesho and all other stores)</h2>
+      <label>Conversion method
+        <select id="extrapeMode">
+          <option value="web">ExtraPe website (uses your ExtraPe login)</option>
+          <option value="api">Custom API endpoint</option>
+        </select>
+      </label>
+
+      <div data-mode="web">
+        <label>ExtraPe link-converter page URL
+          <input id="extrapeConverterUrl" placeholder="https://www.extrape.com/…">
+          <small>Log in to ExtraPe, open the page where you paste a link to convert it, and copy that page's address here.</small>
+        </label>
+        <details>
+          <summary>Advanced: page selectors (only if auto-detect fails)</summary>
+          <label>Input box CSS selector <input id="extrapeInputSelector" placeholder="auto"></label>
+          <label>Convert button CSS selector <input id="extrapeButtonSelector" placeholder="auto"></label>
+          <label>Result element CSS selector <input id="extrapeOutputSelector" placeholder="auto"></label>
+          <label>Wait time per link (seconds) <input id="extrapeTimeoutSec" type="number" min="5" max="120"></label>
+        </details>
+      </div>
+
+      <div data-mode="api">
+        <p class="help">If you have an ExtraPe API (or copied the request from DevTools → Network on the ExtraPe converter), enter it here. Use <code>{{url}}</code> or <code>{{url_enc}}</code> where the product link goes.</p>
+        <label>API URL <input id="extrapeApiUrl" placeholder="https://…"></label>
+        <label>Method
+          <select id="extrapeApiMethod"><option>POST</option><option>GET</option></select>
+        </label>
+        <label>Headers (JSON) <textarea id="extrapeApiHeaders" rows="4"></textarea></label>
+        <label>Body template <textarea id="extrapeApiBody" rows="3"></textarea></label>
+        <label>Result path in JSON response <input id="extrapeApiResultPath" placeholder="e.g. data.link (blank = first link found)"></label>
+      </div>
+    </section>
+
+    <section>
+      <h2>5. Advanced: per-store link templates</h2>
+      <p class="help">Optional. Overrides the converter for a store. JSON map of store id → template. Store ids: amazon, flipkart, myntra, ajio, meesho, shopsy, nykaa, tatacliq, snapdeal, jiomart, croma, reliancedigital, firstcry, purplle, bewakoof, lenskart, pepperfry, mamaearth, boat, other.</p>
+      <textarea id="storeTemplates" rows="4" placeholder='{"flipkart": "{{url}}&affid=yourid"}'></textarea>
+    </section>
+
+    <section>
+      <h2>Test a link</h2>
+      <div class="copy-row"><input id="testUrl" placeholder="Paste any product link"><button type="button" id="testBtn">Convert</button></div>
+      <div id="testResult" class="result"></div>
+    </section>
+
+    <div class="save-bar">
+      <span id="saved"></span>
+      <button type="button" id="save" class="primary">Save settings</button>
+    </div>
+  </main>
+  <script src="common/settings.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

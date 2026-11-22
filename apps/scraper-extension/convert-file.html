@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Convert Excel Links</title>
+  <link rel="stylesheet" href="options.css">
+  <link rel="stylesheet" href="convert-file.css">
+</head>
+<body>
+  <main>
+    <h1>Fill affiliate links into your Excel / CSV</h1>
+    <p class="help">Upload a file that has product links (Amazon, Flipkart, Myntra, Ajio, Meesho…). Every link is converted (Amazon → SiteStripe, others → ExtraPe) and written into the <b>Affiliate Link</b> column. The output uses your deals template columns.</p>
+
+    <section>
+      <label class="drop" id="drop">
+        <input type="file" id="file" accept=".xlsx,.xls,.xlsm,.csv,.ods" hidden>
+        <div class="drop-title">Drop your file here or <u>choose a file</u></div>
+        <div class="help" id="fileInfo">.xlsx, .xls, .csv</div>
+      </label>
+    </section>
+
+    <section id="setup" class="hidden">
+      <h2>Columns</h2>
+      <div class="grid2">
+        <label>Sheet <select id="sheet"></select></label>
+        <label>Header row <select id="headerRow"></select></label>
+        <label>Column with product links <select id="linkCol"></select></label>
+        <label>Write affiliate links into <select id="affCol"></select></label>
+      </div>
+      <label>Output file format
+        <select id="outFormat">
+          <option value="template">Deals template (Sr No … Child Category … Ends)</option>
+          <option value="keep">Keep my file's own columns</option>
+        </select>
+      </label>
+      <p class="help" id="mapInfo"></p>
+      <div class="checks">
+        <label><input type="checkbox" id="skipFilled" checked> Skip rows that already have an affiliate link</label>
+        <label><input type="checkbox" id="addConversion" checked> Also fill a "Conversion" column (method / error)</label>
+        <label id="driveOpt" class="hidden"><input type="checkbox" id="saveDrive"> Also save the filled file to my Drive Excel folder</label>
+      </div>
+      <p class="help" id="summary"></p>
+      <div class="btn-row">
+        <button type="button" id="start" class="primary">Convert links</button>
+        <button type="button" id="stop" class="hidden">Stop</button>
+        <button type="button" id="download" class="hidden primary">⬇ Download filled file</button>
+      </div>
+      <div class="progress hidden" id="progress"><div id="bar"></div></div>
+      <div class="result" id="status"></div>
+    </section>
+
+    <section id="preview" class="hidden">
+      <h2>Results</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Row</th><th>Product link</th><th>Affiliate link</th><th>Status</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="lib/xlsx.full.min.js"></script>
+  <script src="common/stores.js"></script>
+  <script src="bg/excel.js"></script>
+  <script src="convert-file.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+{
+  "manifest_version": 3,
+  "name": "Deal Scraper & Affiliate Converter",
+  "version": "1.3.0",
+  "description": "Scrape products from Amazon, Flipkart, Myntra, Ajio, Meesho and more into Excel + Google Sheet + Drive images, and convert links to affiliate links (ExtraPe / Amazon SiteStripe).",
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "activeTab",
+    "scripting",
+    "downloads",
+    "contextMenus",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Deal Scraper & Affiliate",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.amazon.in/*",
+        "*://*.amazon.com/*",
+        "*://*.flipkart.com/*",
+        "*://*.myntra.com/*",
+        "*://*.ajio.com/*",
+        "*://*.meesho.com/*",
+        "*://*.shopsy.in/*",
+        "*://*.nykaa.com/*",
+        "*://*.nykaafashion.com/*",
+        "*://*.tatacliq.com/*",
+        "*://*.snapdeal.com/*",
+        "*://*.jiomart.com/*",
+        "*://*.croma.com/*",
+        "*://*.reliancedigital.in/*",
+        "*://*.firstcry.com/*",
+        "*://*.purplle.com/*",
+        "*://*.bewakoof.com/*",
+        "*://*.lenskart.com/*",
+        "*://*.pepperfry.com/*",
+        "*://*.mamaearth.in/*",
+        "*://*.boat-lifestyle.com/*"
+      ],
+      "exclude_matches": [
+        "*://affiliate-program.amazon.in/*",
+        "*://affiliate-program.amazon.com/*"
+      ],
+      "js": [
+        "content/floating.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

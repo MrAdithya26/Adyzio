@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div class="brand"><img src="icons/icon48.png" alt=""><span>Deal Scraper &amp; Affiliate</span></div>
+    <button id="openSettings" class="icon-btn" title="Settings">⚙</button>
+  </header>
+
+  <div id="setupWarn" class="warn hidden"></div>
+
+  <!-- Direct conversion for the current tab -->
+  <section class="card">
+    <div class="card-head">
+      <span class="pill" id="storeBadge">—</span>
+      <span class="muted ellipsis" id="pageUrl"></span>
+    </div>
+    <button class="btn primary" id="convertPage">Convert this page link</button>
+    <div class="result hidden" id="pageResult"></div>
+  </section>
+
+  <!-- Option 1 -->
+  <section class="card">
+    <h2><span class="num">1</span> Scrape page → Excel + Google Drive</h2>
+    <p class="muted">Reads every product on this page (listing or product page), saves images (named by product title) to your <b>product images</b> Drive folder, adds rows to your Google Sheet and exports Excel.</p>
+    <div class="toggles">
+      <label><input type="checkbox" id="tAutoScroll"> Auto-scroll to load more</label>
+      <label><input type="checkbox" id="tUploadImages"> Upload images to Drive</label>
+    </div>
+    <details class="batch">
+      <summary>Deal details for this scrape (optional)</summary>
+      <p class="muted small">Filled into every row. Leave the category fields blank to use the store's own category path.</p>
+      <div class="grid">
+        <label>Category<input data-batch="category" placeholder="auto"></label>
+        <label>Subcategory<input data-batch="subcategory" placeholder="auto"></label>
+        <label>Child Category<input data-batch="childCategory" placeholder="auto"></label>
+        <label>Deal Type<input data-batch="dealType" list="dealTypes" placeholder="drop"></label>
+        <label>Ends<input data-batch="ends" placeholder="e.g. 05-11-2026 23:59"></label>
+      </div>
+      <label>Good For<input data-batch="goodFor" placeholder="Students and first-time 5G buyers"></label>
+      <label>Check List<input data-batch="checkList" placeholder="Bank offer terms|Which RAM/storage you are buying"></label>
+      <button class="btn small-btn" id="clearBatch" type="button">Clear</button>
+      <datalist id="dealTypes"><option value="drop"><option value="lightning"><option value="loot"><option value="bank offer"><option value="coupon"><option value="sale"></datalist>
+    </details>
+    <button class="btn primary" id="scrapeBtn">Scrape this page</button>
+  </section>
+
+  <!-- Progress / result -->
+  <section class="card hidden" id="statusCard">
+    <div class="status-line"><span id="statusText"></span></div>
+    <div class="progress hidden" id="progress"><div id="progressBar"></div></div>
+    <ul class="warnings" id="warnings"></ul>
+    <div class="links" id="statusLinks"></div>
+  </section>
+
+  <!-- Option 2 -->
+  <section class="card">
+    <h2><span class="num">2</span> Convert links (affiliate)</h2>
+    <p class="muted" id="jobInfo">No scraped data yet.</p>
+    <p class="muted small">Amazon → your tag + SiteStripe short link. Other stores → ExtraPe.</p>
+    <div class="row">
+      <button class="btn primary" id="convertJobBtn" disabled>Convert scraped links</button>
+      <button class="btn" id="redownloadBtn" disabled title="Download the Excel again">⬇ Excel</button>
+    </div>
+    <button class="btn" id="uploadFileBtn" style="margin-top:8px">📁 Upload your Excel / CSV of links → fill affiliate links</button>
+  </section>
+
+  <!-- Bulk text converter -->
+  <section class="card">
+    <h2>Paste links or deal text</h2>
+    <textarea id="bulkIn" rows="4" placeholder="Paste one or more product links, or a whole deal message…"></textarea>
+    <button class="btn" id="bulkBtn">Convert all links in text</button>
+    <div class="hidden" id="bulkOutWrap">
+      <textarea id="bulkOut" rows="5" readonly></textarea>
+      <button class="btn" id="bulkCopy">Copy</button>
+    </div>
+  </section>
+
+  <script src="common/stores.js"></script>
+  <script src="common/settings.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
