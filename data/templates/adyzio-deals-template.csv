@@ -1,0 +1,11 @@
+Sr No,Store,Product Title,Brand,Price (₹),MRP (₹),Discount %,Rating,Reviews,Product Link,Affiliate Link,Conversion,Image URL,Drive Image Link,Scraped At,Source Page,Category,Subcategory,Child Category,Deal Type,Good For,Check List,Description,Ends
+1,Flipkart,Example product name (replace this row),BrandName,,,,,,https://www.flipkart.com/product-name/p/itmxxxx,https://your-extrape-link,,https://image-link-from-extrape.jpg,,,,Mobiles & Tablets,Smartphones,5G Smartphones,drop,Students and first-time 5G buyers,Bank offer terms|Which RAM/storage you are buying,One or two lines about the product.
+
+## Sheet name: Category Map
+Scraped category,Adyzio category (slug),Products,Example product
+
+## Sheet name: Queue
+Added At,Link,Convert,Note,Status,Result,Processed At,Queue ID
+
+## Sheet name: Job Log
+Time,Job ID,Type,Source,Store,Products,Converted,Failed,Stopped,Excel,Note

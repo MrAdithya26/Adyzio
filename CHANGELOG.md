@@ -3,6 +3,11 @@
 Every version of Adyzio, newest first. Version numbers follow **MAJOR.MINOR.PATCH** (explained in [`docs/HOW-WE-WORK.md`](docs/HOW-WE-WORK.md)).
 Each version lists its **commit ID**. To see or download exactly that version, open `https://github.com/MrAdithya26/Adyzio/tree/<commit ID>` and press Code → Download ZIP.
 
+## v0.9.1 — 2026-11-24 — adyziostore deals sheet recorded
+Commit: see git log
+- New master deals sheet "adyzio-deals-template" on adyziostore@gmail.com with its Apps Script dashboard and Product Images folder (decision in docs/DECISIONS.md; links kept privately, not in this public repo). Adyzio Deals Hub stays as history; nothing deleted.
+- Added `data/templates/adyzio-deals-template.csv` (the plugin 1.6 import template) and chat note `docs/chat-log/2026-11-24_adyziostore-sheet-and-links.md`.
+
 ## v0.9.0 — 2026-11-22 — Extension 1.8.0: Link finder
 Commit: see git log
 - `apps/scraper-extension/` 1.7.0 → **1.8.0**. New: Link finder page (`finder.html/js/css`), store-page bar (`content/finder-bar.js`), walk logic (`bg/finder.js`), popup button. Walks a product list store by store; you open the matching product and press "Use this product"; it saves the product link + affiliate link and opens the next store. Exports a links file whose columns C–I match Schedule M–S.
