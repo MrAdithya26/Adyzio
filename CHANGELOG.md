@@ -3,6 +3,15 @@
 Every version of Adyzio, newest first. Version numbers follow **MAJOR.MINOR.PATCH** (explained in [`docs/HOW-WE-WORK.md`](docs/HOW-WE-WORK.md)).
 Each version lists its **commit ID**. To see or download exactly that version, open `https://github.com/MrAdithya26/Adyzio/tree/<commit ID>` and press Code → Download ZIP.
 
+## v0.10.0 — 2026-11-26 — First Adyzio promo reel (video)
+Commit: see git log
+- New `marketing/promo-2026-11/`: a 30-second vertical promo reel in Telugu-English. Story: too many offers → Adyzio checks every deal → real adyzio.com card and "Shop by budget" panel → Telegram/WhatsApp, no spam → adyzio.com, Telegram @adyzio, WhatsApp channel.
+- Made with the new motionmaxxing video skill (HTML rendered to MP4). The music is original, composed in code, and the sound effects come from Earshot, so there is no licence or credit to give.
+- Uses only real site screenshots (taken 26 Nov 2026) without store product photos or store logos. No invented prices or numbers. The captions carry the affiliate disclosure.
+- The MP4 itself stays on the computer and in Drive, not GitHub, the same as the December reels.
+- Found: `@adyziodeals` (the name in planner task adz-05) is not a Telegram channel. The live channel is `@adyzio`.
+- Nothing removed.
+
 ## v0.9.1 — 2026-11-24 — adyziostore deals sheet recorded
 Commit: see git log
 - New master deals sheet "adyzio-deals-template" on adyziostore@gmail.com with its Apps Script dashboard and Product Images folder (decision in docs/DECISIONS.md; links kept privately, not in this public repo). Adyzio Deals Hub stays as history; nothing deleted.

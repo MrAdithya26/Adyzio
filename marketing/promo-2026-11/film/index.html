@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="te">
+<head>
+<meta charset="utf-8">
+<title>Adyzio promo reel</title>
+<meta name="viewport" content="width=1080, height=1920">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;600;700&display=block" rel="stylesheet">
+<style>
+/* ACCENT (#e8890c, Adyzio orange) = "checked". It only ever marks the word or line that says something was checked. */
+:root {
+  --ground: #f7f6fb; --paper: #fafafc; --deep: #1b1840; --indigo: #2a2470;
+  --ink: #1b1840; --ink-2: #4a4672; --accent: #e8890c; --share: #0b8463;
+  --te: "Noto Sans Telugu", "Figtree", sans-serif;
+  --display: "Bricolage Grotesque", "Figtree", sans-serif;
+  --body: "Figtree", "Noto Sans Telugu", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+#main { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--ground); color: var(--ink); font-family: var(--body); }
+.scene { position: absolute; inset: 0; overflow: hidden; }
+.cam { position: absolute; inset: 0; }
+.line { position: absolute; left: 0; width: 1080px; text-align: center; white-space: pre; }
+.te { font-family: var(--te); font-weight: 700; }
+/* light world: soft key light from top-left, paper ground */
+.light { background: radial-gradient(1200px 900px at 20% 8%, #ffffff 0%, rgba(255,255,255,0) 70%), radial-gradient(900px 900px at 90% 100%, #ecebfb 0%, rgba(236,235,251,0) 70%), var(--ground); }
+.shot { position: absolute; border-radius: 28px; box-shadow: 0 40px 90px rgba(27,24,64,.16), 0 6px 18px rgba(27,24,64,.08); }
+.pill { position: absolute; display: flex; align-items: center; justify-content: center; border-radius: 44px; background: var(--indigo); font-family: var(--display); font-weight: 800; letter-spacing: -2px; color: #fff; }
+.pill b { color: var(--accent); font-weight: 800; }
+.touch { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.touch i { position: absolute; left: -46px; top: -46px; width: 92px; height: 92px; border-radius: 50%; background: rgba(27,24,64,.22); border: 4px solid rgba(255,255,255,.9); box-shadow: 0 10px 30px rgba(27,24,64,.3); }
+.btn { position: absolute; display: flex; align-items: center; justify-content: center; border-radius: 22px; color: #fff; font-family: var(--body); font-weight: 700; }
+</style>
+</head>
+<body>
+<div id="main">
+
+  <!-- BEAT 1 HOOK (0-105): the flood of offers. Ground = the real adyzio.com page racing past, blurred. -->
+  <section id="s1" class="scene" style="background:var(--deep)">
+    <img id="flood" src="img/scroll.jpg" style="position:absolute;left:-40px;top:0;width:1160px;filter:blur(10px) saturate(1.2);opacity:.30">
+    <div style="position:absolute;inset:0;background:radial-gradient(700px 600px at 50% 48%, rgba(42,36,112,.0) 0%, rgba(27,24,64,.75) 100%)"></div>
+    <div id="h1a" class="line te" style="top:690px;font-size:84px;line-height:130px;color:#cfcbe8">ఇన్ని offers…</div>
+    <div id="h1b" class="line te" style="top:840px;font-size:118px;line-height:170px;color:#fff">ఏది నిజమైన deal?</div>
+  </section>
+
+  <!-- BEAT 2 TURN (105-240): Adyzio arrives; the brand's own promise. -->
+  <section id="s2" class="scene light" style="visibility:hidden">
+    <div id="cam2" class="cam">
+      <div id="logo2" class="pill" style="left:250px;top:560px;width:580px;height:190px;font-size:136px">adyz<b>io</b></div>
+      <div id="t2a" class="line te" style="top:880px;font-size:96px;line-height:140px">ప్రతి deal,</div>
+      <div id="t2b" class="line te" style="top:1010px;font-size:96px;line-height:140px">మీకు చేరే ముందే</div>
+      <div id="t2c" class="line te" style="top:1140px;font-size:110px;line-height:150px">check చేస్తాం.</div>
+    </div>
+  </section>
+
+  <!-- BEAT 3 PROOF (240-400): real adyzio.com deal card, magnified; tap Buy Now. -->
+  <section id="s3" class="scene light" style="visibility:hidden">
+    <div id="cam3" class="cam">
+      <img class="shot" src="img/card.png" style="left:-60px;top:420px;width:2100px">
+      <div id="chk3" style="position:absolute;left:130px;top:1125px;width:560px;height:60px;border-radius:12px;background:rgba(232,137,12,.22)"></div>
+      <div id="bn3" style="position:absolute;left:140px;top:1531px;width:750px;height:209px;border-radius:30px;background:rgba(0,0,0,.22);visibility:hidden"></div>
+    </div>
+    <div id="c3a" class="line te" style="top:110px;font-size:70px;line-height:100px">Amazon, Flipkart, Myntra…</div>
+    <div id="c3b" class="line te" style="top:200px;font-size:70px;line-height:100px">అన్నీ ఒకే చోట.</div>
+    <div id="c3c" class="line te" style="top:150px;font-size:70px;line-height:100px">కొనేది store site లోనే.</div>
+    <div id="tap3" class="touch"><i></i></div>
+  </section>
+
+  <!-- BEAT 4 PROOF (400-585): real "Shop by budget" panel; the 24-hour price check line. -->
+  <section id="s4" class="scene light" style="visibility:hidden">
+    <div id="cam4" class="cam">
+      <img class="shot" src="img/budget.png" style="left:-10px;top:700px;width:1300px;border-radius:0">
+      <div id="chk4" style="position:absolute;left:553px;top:817px;width:710px;height:44px;border-radius:8px;background:rgba(232,137,12,.22)"></div>
+    </div>
+    <div id="c4a" class="line te" style="top:170px;font-size:80px;line-height:120px">ధరలు, గత 24 గంటల్లో</div>
+    <div id="c4b" class="line te" style="top:290px;font-size:92px;line-height:130px">check చేసినవే.</div>
+  </section>
+
+  <!-- BEAT 5 PROOF (585-765): the site's real join banner copy, rebuilt in the site's colours; tap Join Telegram. -->
+  <section id="s5" class="scene" style="visibility:hidden;background:radial-gradient(900px 800px at 30% 20%, #fff7ea 0%, #fff1dc 60%, #f7e3c3 100%)">
+    <div id="cam5" class="cam">
+      <div id="card5" class="shot" style="left:60px;top:640px;width:960px;height:760px;background:#fff;padding:70px 64px">
+        <div style="font-family:var(--display);font-weight:800;font-size:84px;line-height:92px;letter-spacing:-2px;color:var(--ink)">Get loot deals before they sell out</div>
+        <div style="margin-top:34px;font-size:44px;line-height:62px;color:var(--ink-2)">Join Adyzio on Telegram and WhatsApp. A few useful picks a day, no spam.</div>
+      </div>
+      <div id="tg5" class="btn" style="left:124px;top:1220px;width:400px;height:120px;font-size:44px;background:var(--indigo)">Join Telegram</div>
+      <div id="wa5" class="btn" style="left:556px;top:1220px;width:400px;height:120px;font-size:44px;background:var(--share)">Join WhatsApp</div>
+    </div>
+    <div id="c5a" class="line te" style="top:240px;font-size:84px;line-height:124px">రోజుకు కొన్ని useful picks.</div>
+    <div id="c5b" class="line te" style="top:370px;font-size:96px;line-height:130px">No spam.</div>
+    <div id="tap5" class="touch"><i></i></div>
+  </section>
+
+  <!-- BEAT 6 CTA (765-900): where to find Adyzio. Light ground, one lockup, still drifting on the last frame. -->
+  <section id="s6" class="scene light" style="visibility:hidden">
+    <div id="sweep6" style="position:absolute;left:-300px;top:200px;width:1100px;height:1400px;background:radial-gradient(closest-side, rgba(255,241,220,.95), rgba(255,241,220,0));"></div>
+    <div id="cta" class="cam">
+      <div id="logo6" class="pill" style="left:300px;top:520px;width:480px;height:160px;font-size:112px">adyz<b>io</b></div>
+      <div id="url6" class="line" style="top:760px;font-family:var(--display);font-weight:800;font-size:112px;line-height:140px;letter-spacing:-3px">adyzio.com</div>
+      <div id="tg6" class="btn" style="left:110px;top:1000px;width:860px;height:140px;font-size:56px;background:var(--indigo)">Telegram&nbsp;&nbsp;·&nbsp;&nbsp;@adyzio</div>
+      <div id="wa6" class="btn" style="left:110px;top:1180px;width:860px;height:140px;font-size:56px;background:var(--share)">WhatsApp&nbsp;&nbsp;·&nbsp;&nbsp;Adyzio channel</div>
+    </div>
+  </section>
+
+</div>
+
+<script src="./runtime/vendor/gsap.min.js"></script>
+<script src="./runtime/motion.js"></script>
+<script>
+const M = Motion.film({ fps: 30, duration: 30, width: 1080, height: 1920, clock: 'smooth' });
+const ACCENT = '#e8890c';
+
+/* BEAT 1 HOOK: the page races past (too many offers), the question lands. */
+M.kf('#flood', 'y', [[0, 0], [105, -5200, 'gentleIn']]);
+M.words('#h1a', { at: 0, mech: 'rise', dist: 70, gaps: [5], frames: 12 });
+M.words('#h1b', { at: 26, mech: 'rise', dist: 90, gaps: [6, 7, 8], frames: 13, smear: true, accent: { color: ACCENT, frames: 30, word: -1 } });
+M.kf('#h1b', 'scale', [[40, 1], [104, 1.08, 'gentleIn']]);
+
+/* BEAT 2 TURN: logo crashes in from oversize, then the brand's own promise; "check" carries the accent. */
+M.cut(105, { hide: ['#s1'], show: ['#s2'] });
+M.enter('#logo2', { at: 105, frames: 16, ease: 'snapSettle', from: { scale: 3.5, blur: 14 } });
+M.words('#t2a', { at: 128, mech: 'rise', dist: 60, gaps: [6], frames: 12 });
+M.words('#t2b', { at: 146, mech: 'rise', dist: 60, gaps: [6, 6], frames: 12 });
+M.words('#t2c', { at: 170, mech: 'rise', dist: 80, gaps: [9], frames: 13, accent: { color: ACCENT, frames: 60, word: 0 } });
+M.drift('#cam2', { prop: 'scale', from: 1, to: 1.06, start: 105, end: 240 });
+
+/* BEAT 3 PROOF: real card. Camera starts on "Check latest price" (accent = checked), pulls back, finger taps Buy Now. */
+M.cut(240, { hide: ['#s2'], show: ['#s3'] });
+M.camera('#cam3', [[240, { scale: 1.5 }], [300, { scale: 1 }, 'glide']], { origin: '420px 600px' });
+M.kf('#chk3', 'opacity', [[240, 1], [290, 1], [306, 0]]);
+M.words('#c3a', { at: 246, mech: 'rise', dist: 50, gaps: [4, 4, 5], frames: 11 });
+M.words('#c3b', { at: 266, mech: 'rise', dist: 50, gaps: [5, 6], frames: 11 });
+M.exit('#c3a', { at: 318, frames: 9, ease: 'accelExit', to: { y: -40 }, hide: true });
+M.exit('#c3b', { at: 318, frames: 9, ease: 'accelExit', to: { y: -40 }, hide: true });
+M.words('#c3c', { at: 330, mech: 'rise', dist: 50, gaps: [5, 5, 6], frames: 11 });
+M.cursor('#tap3', { keys: [[318, 900, 2050, 3, 0], [348, 515, 1635, 1, 0]], ease: 'glide' });
+M.show('#tap3', 318);
+M.press('#tap3', '#bn3', { at: 360, frames: 3 });
+M.drift('#cam3', { prop: 'y', from: 0, to: -40, start: 296, end: 400 });
+M.show('#bn3', 361);
+
+/* BEAT 4 PROOF: cut on the press. The real line "Prices we checked in the last 24 hours", then the budget tiles. */
+M.cut(400, { hide: ['#s3'], show: ['#s4'] });
+M.camera('#cam4', [[400, { scale: 1.45 }], [440, { scale: 1.45 }], [500, { scale: 1 }, 'glide']], { origin: '1724px 837px' });
+M.kf('#chk4', 'opacity', [[400, 1], [470, 1], [490, 0]]);
+M.words('#c4a', { at: 406, mech: 'rise', dist: 50, gaps: [5, 5, 5], frames: 11 });
+M.words('#c4b', { at: 428, mech: 'rise', dist: 70, gaps: [8], frames: 12, accent: { color: ACCENT, frames: 50, word: 0 } });
+M.drift('#cam4', { prop: 'y', from: 0, to: -40, start: 500, end: 585 });
+
+/* BEAT 5 PROOF: the join banner, then a tap on Join Telegram. */
+M.cut(585, { hide: ['#s4'], show: ['#s5'] });
+M.enter('#card5', { at: 585, frames: 12, ease: 'softLand', from: { y: 120, scale: .94 }, smear: { axis: 'y', px: 30 } });
+M.enter('#tg5', { at: 600, frames: 11, ease: 'softLand', from: { y: 60 } });
+M.enter('#wa5', { at: 604, frames: 11, ease: 'softLand', from: { y: 60 } });
+M.words('#c5a', { at: 610, mech: 'rise', dist: 50, gaps: [5, 5, 6], frames: 11 });
+M.words('#c5b', { at: 642, mech: 'pop', dist: .6, gaps: [6], frames: 12 });
+M.drift('#cam5', { prop: 'scale', from: 1, to: 1.04, start: 585, end: 765 });
+M.cursor('#tap5', { keys: [[690, 700, 2050, 3, 0], [720, 324, 1280, 1, 0]], ease: 'glide' });
+M.show('#tap5', 690);
+M.press('#tap5', '#tg5', { at: 734, frames: 3, targetStep: { backgroundColor: '#1b1840' } });
+
+/* BEAT 6 CTA: cut on the press; lockup lands smaller, the three places to find Adyzio, still drifting at the end. */
+M.cut(764, { hide: ['#s5'], show: ['#s6'] });
+M.enter('#logo6', { at: 764, frames: 14, ease: 'snapSettle', from: { scale: 2.2, blur: 10 } });
+M.enter('#url6', { at: 778, frames: 12, ease: 'softLand', from: { y: 60 } });
+M.enter('#tg6', { at: 792, frames: 12, ease: 'softLand', from: { y: 70 } });
+M.enter('#wa6', { at: 800, frames: 12, ease: 'softLand', from: { y: 70 } });
+M.drift('#cta', { prop: 'scale', from: 1, to: .92, start: 764, end: 900 });
+M.drift('#cta', { prop: 'y', from: 0, to: -46, start: 764, end: 900 });
+M.drift('#sweep6', { prop: 'x', from: 0, to: 520, start: 764, end: 900 });
+
+window.__ready = Motion.loaded().then(() => { if (/selftest/.test(location.search)) Motion.selfTest(M, { samples: 24 }); });
+</script>
+</body>
+</html>
